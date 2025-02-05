@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,12 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Student extends User{
+public class Student extends User {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private List<Course> enrolledCourses = new ArrayList<>();
+    private List<Course> enrolledCourses;
 
     @Override
     public String displayRole() {

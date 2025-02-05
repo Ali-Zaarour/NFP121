@@ -18,7 +18,7 @@ public class Teacher extends User{
 
     private static final long serialVersionUID = 1L;
 
-    private List<Course> courses = new ArrayList<>();
+    private List<Course> courses;
 
     @Override
     public String displayRole() {

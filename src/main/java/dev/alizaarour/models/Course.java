@@ -4,7 +4,6 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,6 +17,5 @@ public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String title;
-    private double fee;
-    private List<Level> levels = new ArrayList<>();
+    private List<Level> levels;
 }

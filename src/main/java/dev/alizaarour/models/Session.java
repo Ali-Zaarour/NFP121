@@ -5,7 +5,6 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -20,5 +19,5 @@ public class Session implements Serializable {
 
     private LocalDateTime date;
     private Teacher instructor;
-    private List<Student> students = new ArrayList<>();
+    private List<Student> students;
 }

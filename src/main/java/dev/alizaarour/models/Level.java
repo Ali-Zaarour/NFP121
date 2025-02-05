@@ -18,5 +18,6 @@ public class Level implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int levelNumber;
-    private List<Session> sessions = new ArrayList<>();
+    private double fee;
+    private List<Session> sessions;
 }
