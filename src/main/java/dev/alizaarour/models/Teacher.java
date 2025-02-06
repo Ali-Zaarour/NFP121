@@ -1,31 +1,23 @@
 package dev.alizaarour.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serial;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @SuperBuilder
-public class Teacher extends User{
+public class Teacher extends User {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    private List<Course> courses;
 
-    @Override
-    public String displayRole() {
-        return Privileges.STUDENT.getValue();
-    }
-
-    public void createCourse(Course course) {
-        courses.add(course);
+    public Teacher(String name, String email, String psw, Role role) {
+        super(++num, name, email, psw, Role.TEACHER);
     }
 }

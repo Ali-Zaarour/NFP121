@@ -18,7 +18,7 @@ public class Chapter implements TrainingMaterial {
     private static final long serialVersionUID = 1L;
 
     private String title;
-    private List<TrainingMaterial> materials = new ArrayList<>();
+    private List<TrainingMaterial> materials;
 
     @Override
     public String display() {

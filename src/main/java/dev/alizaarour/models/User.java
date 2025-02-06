@@ -1,9 +1,6 @@
 package dev.alizaarour.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
@@ -14,18 +11,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@ToString
 public abstract class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    protected static String id;
+    public static int num = 0;
+    protected int userId;
     protected String name;
     protected String email;
     protected String psw;
+    protected Role role;
 
-    public boolean authenticate(String email, String psw) {
-        return this.email.equals(email) && this.psw.equals(psw);
-    }
 
-    public abstract String displayRole();
 }
