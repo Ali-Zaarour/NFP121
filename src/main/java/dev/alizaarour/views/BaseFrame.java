@@ -1,10 +1,15 @@
 package dev.alizaarour.views;
 
+import dev.alizaarour.config.pack.ApplicationInitializer;
+import dev.alizaarour.utils.DataAction;
+import dev.alizaarour.config.StandardApplicationProperties;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
 
 @Getter
@@ -14,25 +19,31 @@ public abstract class BaseFrame extends JFrame {
     public BaseFrame() {
     }
 
-    public BaseFrame(String frameName) {
-        runComponent(frameName);
+    public BaseFrame(String frameName, int width, int height, boolean save) {
+        runComponent(frameName, width, height, save);
     }
 
-    protected void runComponent(String frameName) {
-        initializeFrame();
+    protected void runComponent(String frameName, int width, int height, boolean save) {
+        initializeFrame(width, height);
         initVariable();
         createComponents();
         centerFrameOnScreen();
         setIconImageToFrame();
-        setLayout(null);
         setVisible(true);
         setResizable(false);
         setTitle("Online training center : " + frameName);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                saveOnClose(save);
+            }
+        });
     }
 
     // Initialize the frame with default properties
-    private void initializeFrame() {
-        setSize(500, 500);
+    private void initializeFrame(int width, int height) {
+        setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -53,6 +64,17 @@ public abstract class BaseFrame extends JFrame {
             setIconImage(image);
         } else {
             System.err.println("Image not found: " + imagePath);
+        }
+    }
+
+    protected void saveOnClose(boolean save) {
+        if (save) {
+            try {
+                DataAction.serialize(ApplicationInitializer.dataSchema, StandardApplicationProperties.getInstance().getDataPath() + "/data_schema.ser");
+                System.out.println("Data saved.");
+            } catch (Exception x) {
+                System.err.println("Error saving: " + x.getMessage());
+            }
         }
     }
 
