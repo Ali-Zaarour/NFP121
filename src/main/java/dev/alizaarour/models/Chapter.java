@@ -1,32 +1,32 @@
 package dev.alizaarour.models;
 
-
-import lombok.*;
-
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Chapter implements TrainingMaterial {
-
+public class Chapter extends ChapterComponent {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String title;
-    private List<TrainingMaterial> materials;
+    private final List<ChapterComponent> subChapters;
 
-    @Override
-    public String display() {
-        var list = new ArrayList<String>();
-        for (TrainingMaterial material : materials) {
-            list.add(material.display());
-        }
-        return "Chapter: " + title + "\n" + String.join("\n", list);
+    public Chapter(String title) {
+        super(title);
+        this.subChapters = new ArrayList<>();
     }
 
+    public void addSubChapter(ChapterComponent chapter) {
+        subChapters.add(chapter);
+    }
+
+    @Override
+    public void display() {
+        System.out.println("Chapter: " + title);
+        for (CourseContent content : contents) {
+            System.out.println(content.getContent());
+        }
+        for (ChapterComponent chapter : subChapters) {
+            chapter.display();
+        }
+    }
 }

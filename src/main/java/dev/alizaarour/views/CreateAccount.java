@@ -3,6 +3,7 @@ package dev.alizaarour.views;
 import dev.alizaarour.config.pack.ApplicationInitializer;
 import dev.alizaarour.models.Role;
 import dev.alizaarour.services.UserFactory;
+import dev.alizaarour.services.UserService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,7 +99,7 @@ public class CreateAccount extends BaseFrame {
             return;
         }
 
-        if (ApplicationInitializer.dataSchema.findUserWithCondition(u -> u.getEmail().equals(email) || u.getName().equals(name)).isPresent()) {
+        if (UserService.getInstance().findUserWithCondition(u -> u.getEmail().equals(email) || u.getName().equals(name)).isPresent()) {
             JOptionPane.showMessageDialog(this, "Email or Name already exist!", "Info", JOptionPane.INFORMATION_MESSAGE);
             return;
         }

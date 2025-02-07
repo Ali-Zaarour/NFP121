@@ -1,22 +1,38 @@
 package dev.alizaarour.views;
 
-import javax.swing.*;
+import dev.alizaarour.views.components.MainContentPanel;
+import dev.alizaarour.views.helper.PageName;
+import dev.alizaarour.views.pack.PanelFactory;
+import dev.alizaarour.views.pack.StudentPanelFactory;
+
+import java.awt.*;
 
 public class StudentHome extends BaseFrame {
+    private MainContentPanel mainContent;
+    private PanelFactory panelFactory;
 
     public StudentHome() {
         super("student home page", 1200, 800, true);
     }
 
     @Override
-    protected void createComponents() {
-
+    protected void initVariable() {
+        mainContent = new MainContentPanel();
+        panelFactory = new StudentPanelFactory(mainContent);
     }
 
     @Override
-    protected void initVariable() {
-        JLabel label = new JLabel("Welcome, Student!", SwingConstants.CENTER);
-        label.setBounds(150, 200, 200, 50);
-        add(label);
+    protected void createComponents() {
+        setLayout(new BorderLayout());
+
+        add(panelFactory.createNavbar(), BorderLayout.NORTH);
+        add(panelFactory.createSidebar(), BorderLayout.WEST);
+
+        mainContent.addPage(PageName.STUDENT_DASHBOARD);
+        mainContent.addPage(PageName.STUDENT_COURSES);
+        mainContent.addPage(PageName.STUDENT_RESULTS);
+        mainContent.addPage(PageName.PROFILE);
+
+        add(mainContent, BorderLayout.CENTER);
     }
 }

@@ -1,8 +1,8 @@
 package dev.alizaarour.config;
 
-import dev.alizaarour.config.pack.ApplicationInitializer;
 import dev.alizaarour.models.User;
 import dev.alizaarour.services.LoginRedirectContext;
+import dev.alizaarour.services.UserService;
 import dev.alizaarour.views.BaseFrame;
 import dev.alizaarour.views.Login;
 import lombok.Getter;
@@ -33,8 +33,12 @@ public class SessionManager {
         return this.user != null;
     }
 
+    public void getLatestData() {
+        this.user = UserService.getInstance().findUserWithCondition(u -> u.getEmail().equals(this.user.getEmail())).get();
+    }
+
     public void login(BaseFrame logInFrame, String email, String psw) {
-        var currentUser = ApplicationInitializer.dataSchema.findUserWithCondition(u -> u.getEmail().equals(email));
+        var currentUser = UserService.getInstance().findUserWithCondition(u -> u.getEmail().equals(email));
         if (currentUser.isPresent()) {
             if (currentUser.get().getPsw().equals(psw)) {
                 this.user = currentUser.get();

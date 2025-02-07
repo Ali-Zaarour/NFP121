@@ -1,22 +1,39 @@
 package dev.alizaarour.views;
 
-import javax.swing.*;
+import dev.alizaarour.views.components.MainContentPanel;
+import dev.alizaarour.views.helper.PageName;
+import dev.alizaarour.views.pack.PanelFactory;
+import dev.alizaarour.views.pack.TeacherPanelFactory;
+
+import java.awt.*;
 
 public class TeacherHome extends BaseFrame {
+    private MainContentPanel mainContent;
+    private PanelFactory panelFactory;
 
     public TeacherHome() {
         super("teacher home page", 1200, 800, true);
     }
 
     @Override
-    protected void createComponents() {
-
+    protected void initVariable() {
+        mainContent = new MainContentPanel();
+        panelFactory = new TeacherPanelFactory(mainContent);
     }
 
     @Override
-    protected void initVariable() {
-        JLabel label = new JLabel("Welcome, Teacher!", SwingConstants.CENTER);
-        label.setBounds(150, 200, 200, 50);
-        add(label);
+    protected void createComponents() {
+        setLayout(new BorderLayout());
+
+        add(panelFactory.createNavbar(), BorderLayout.NORTH);
+        add(panelFactory.createSidebar(), BorderLayout.WEST);
+
+        mainContent.addPage(PageName.TEACHER_MANAGE_COURSES);
+        mainContent.addPage(PageName.TEACHER_CREATE_COURSE);
+        mainContent.addPage(PageName.TEACHER_EVALUATIONS);
+        mainContent.addPage(PageName.TEACHER_ATTENDANCE);
+        mainContent.addPage(PageName.PROFILE);
+
+        add(mainContent, BorderLayout.CENTER);
     }
 }
