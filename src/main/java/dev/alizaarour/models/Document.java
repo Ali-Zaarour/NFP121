@@ -12,6 +12,6 @@ public class Document extends CourseContent {
 
     @Override
     public String getContent() {
-        return "📄 Document: " + content;
+        return "Document: " + content;
     }
 }
