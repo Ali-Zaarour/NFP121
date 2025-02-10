@@ -1,5 +1,6 @@
 package dev.alizaarour.views.pack;
 
+import dev.alizaarour.views.BaseFrame;
 import dev.alizaarour.views.components.MainContentPanel;
 import dev.alizaarour.views.components.NavbarPanel;
 import dev.alizaarour.views.components.SidebarPanel;
@@ -14,8 +15,8 @@ public abstract class PanelFactory {
         this.mainContent = mainContent;
     }
 
-    public NavbarPanel createNavbar() {
-        return new NavbarPanel();
+    public NavbarPanel createNavbar(BaseFrame current) {
+        return new NavbarPanel(current);
     }
 
     public SidebarPanel createSidebar() {
