@@ -19,8 +19,9 @@ public class Level implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private int num; //level number
-    private int fees;
+    private int num;
+    private String title;
+    private double fees;
     private List<Chapter> chapters;
     private Quiz quiz;
 
@@ -31,11 +32,7 @@ public class Level implements Serializable {
         this.chapters = new ArrayList<>();
     }
 
-
-    public void display() {
-        System.out.println("Level details { num: " + num + ", fees: " + fees + " $ }");
-        for (Chapter chapter : chapters) {
-            chapter.display();
-        }
+    public String toString() {
+        return num + " - " + title + " - chapters: " + chapters.size() + " - fees: " + fees;
     }
 }

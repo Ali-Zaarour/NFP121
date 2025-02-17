@@ -42,11 +42,4 @@ public class Course implements Serializable {
         this.pk = ApplicationInitializer.dataSchema.getCourseSeq() + 1;
         ApplicationInitializer.dataSchema.setUserSeq(ApplicationInitializer.dataSchema.getCourseSeq() +1 );
     }
-
-    public void display() {
-        System.out.println("Course details");
-        for (Level lv : levels) {
-            lv.display();
-        }
-    }
 }

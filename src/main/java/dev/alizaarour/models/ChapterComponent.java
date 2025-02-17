@@ -1,10 +1,15 @@
 package dev.alizaarour.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public abstract class ChapterComponent implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -20,6 +25,7 @@ public abstract class ChapterComponent implements Serializable {
     public void addContent(CourseContent content) {
         contents.add(content);
     }
+
 
     public abstract void display();
 }
