@@ -32,6 +32,10 @@ public class Level implements Serializable {
         this.chapters = new ArrayList<>();
     }
 
+    public void addChapter(Chapter chapter) {
+        this.chapters.add(chapter);
+    }
+
     public String toString() {
         return num + " - " + title + " - chapters: " + chapters.size() + " - fees: " + fees;
     }
