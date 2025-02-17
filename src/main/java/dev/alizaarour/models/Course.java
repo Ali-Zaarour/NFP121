@@ -40,6 +40,6 @@ public class Course implements Serializable {
         teachingBy = new TreeSet<>();
         levels = new ArrayList<>();
         this.pk = ApplicationInitializer.dataSchema.getCourseSeq() + 1;
-        ApplicationInitializer.dataSchema.setUserSeq(ApplicationInitializer.dataSchema.getCourseSeq() +1 );
+        ApplicationInitializer.dataSchema.setCourseSeq(ApplicationInitializer.dataSchema.getCourseSeq() + 1);
     }
 }

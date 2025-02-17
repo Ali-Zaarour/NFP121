@@ -27,6 +27,26 @@ public class DataSchema extends Observable implements Serializable {
         this.courses = new ArrayList<>();
     }
 
+    public void addC(Course course) {
+        courses.add(course);
+        notifyObservers();
+    }
+
+    public void removeC(Course course) {
+        courses.remove(course);
+        notifyObservers();
+    }
+
+    public void addU(User user) {
+        users.add(user);
+        notifyObservers();
+    }
+
+    public void removeU(User user) {
+        users.remove(user);
+        notifyObservers();
+    }
+
     public <T extends User> List<T> getUsersByType(Class<T> type) {
         return users.stream()
                 .filter(type::isInstance)

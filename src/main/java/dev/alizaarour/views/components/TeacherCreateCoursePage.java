@@ -3,6 +3,7 @@ package dev.alizaarour.views.components;
 import dev.alizaarour.config.SessionManager;
 import dev.alizaarour.config.pack.ApplicationInitializer;
 import dev.alizaarour.models.*;
+import dev.alizaarour.services.CourseService;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -289,7 +290,7 @@ public class TeacherCreateCoursePage implements Page {
         String title = levelInput.getText().trim();
         double fee = (double) feeSpinner.getValue();
         if (!title.isEmpty()) {
-            Level newLevel = new Level(levelModel.getSize() + 1, title, fee, new ArrayList<>(),null);
+            Level newLevel = new Level(levelModel.getSize() + 1, title, fee, new ArrayList<>(), null);
             levelModel.addElement(newLevel);
             levelInput.setText("");
         }
@@ -421,7 +422,8 @@ public class TeacherCreateCoursePage implements Page {
         if (ApplicationInitializer.dataSchema.getCourses() == null) {
             ApplicationInitializer.dataSchema.setCourses(new ArrayList<>());
         }
-        ApplicationInitializer.dataSchema.getCourses().add(newCourse);
+
+        CourseService.getInstance().addCourse(newCourse);
 
         // Show a success message
         JOptionPane.showMessageDialog(mainPanel, "Done! Course has been saved.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -429,7 +431,6 @@ public class TeacherCreateCoursePage implements Page {
         // Clear all components to allow a new course creation
         clearAllFields();
     }
-
 
     private void clearAllFields() {
         courseTitleField.setText("");
@@ -447,8 +448,6 @@ public class TeacherCreateCoursePage implements Page {
 
         contentField.setText("");
     }
-
-
 
     @Override
     public JPanel getPagePanel() {
