@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherCreateCoursePage implements Page {
-    private final JPanel mainPanel;
+    private final JPanel containerPanel ,mainPanel;
     private JTextField syllabusInput, levelInput, contentField, courseTitleField;
     private DefaultListModel<String> syllabusModel;
     private JList<String> syllabusList;
@@ -27,32 +27,64 @@ public class TeacherCreateCoursePage implements Page {
     private JTextArea courseObjectiveField;
 
     public TeacherCreateCoursePage() {
-        mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setPreferredSize(new Dimension(1000, 700));
+        mainPanel = new JPanel(new GridBagLayout()); // Keep using GridBagLayout
+        mainPanel.setPreferredSize(new Dimension(900, 1200)); // Ensure enough space
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1; // Distribute width properly
-        gbc.weighty = 1; // Allow components to expand
+        gbc.fill = GridBagConstraints.BOTH; // Allow components to expand
+        gbc.weightx = 1; // Ensures even column distribution
+        gbc.weighty = 0; // Prevents stretching
 
-        createTopRow(gbc);  // Row 1: Course Info + Syllabus
-        createMiddleRow(gbc); // Row 2: Levels
-        createBottomRow(gbc); // Row 3: Chapters & Content
-        addSaveButton(gbc); // Save Button
+        // --------------- ROW 1: Course Info & Syllabus (Two Columns) -----------------
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1; // First column
+        gbc.weightx = 0.5;
+        createTopRow(gbc); // Course Info
 
+        gbc.gridx = 1;
+        createSyllabusRow(gbc); // Syllabus on the right
+
+        // --------------- ROW 2: Levels (Full Width) -----------------
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2; // Levels should span the full width
+        gbc.weightx = 1;
+        createMiddleRow(gbc);
+
+        // --------------- ROW 3: Chapters & Content (Full Width) -----------------
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2; // Spanning full width
+        createBottomRow(gbc);
+
+        // --------------- ROW 4: Quiz (Full Width) -----------------
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        createQuizRow(gbc);
+
+        // --------------- ROW 5: Save Button (Centered) -----------------
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        addSaveButton(gbc);
+
+        // Wrap `mainPanel` inside a `JScrollPane`
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        // Add the scroll pane to a container panel for proper layout
+        containerPanel = new JPanel(new BorderLayout());
+        containerPanel.add(scrollPane, BorderLayout.CENTER);
     }
 
     // ----------- ROW 1: Course Info + Syllabus ---------------
     private void createTopRow(GridBagConstraints gbc) {
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 1;
-        gbc.weighty = 0.3; // Increased weight to allocate more height
-
-        // -------------------- COURSE INFORMATION PANEL --------------------
         JPanel coursePanel = new JPanel(new GridBagLayout());
         coursePanel.setBorder(BorderFactory.createTitledBorder("Course Information"));
 
@@ -62,50 +94,47 @@ public class TeacherCreateCoursePage implements Page {
         c.gridx = 0;
         c.gridy = 0;
         c.weightx = 0.3;
+
         coursePanel.add(new JLabel("Course Title:"), c);
 
         c.gridx = 1;
         c.weightx = 0.7;
         courseTitleField = new JTextField(25);
+        courseTitleField.setPreferredSize(new Dimension(300, 40)); // Increased height
         coursePanel.add(courseTitleField, c);
 
         c.gridx = 0;
         c.gridy = 1;
-        c.weightx = 0.3;
         coursePanel.add(new JLabel("Created By:"), c);
 
         c.gridx = 1;
-        c.weightx = 0.7;
         JTextField createdByField = new JTextField(SessionManager.getInstance().getUser().getEmail(), 25);
         createdByField.setEditable(false);
+        createdByField.setPreferredSize(new Dimension(300, 40));
         coursePanel.add(createdByField, c);
 
-        // -------------------- FIXED COURSE OBJECTIVE TEXT AREA --------------------
         c.gridx = 0;
         c.gridy = 2;
-        c.weightx = 0.3;
-        c.weighty = 0.5; // Allocate vertical space for expansion
-        c.fill = GridBagConstraints.BOTH;
         coursePanel.add(new JLabel("Course Objective:"), c);
 
         c.gridx = 1;
-        c.weightx = 0.7;
         c.gridwidth = 2;
-        c.gridheight = 2; // Span multiple rows to ensure height
-        c.weighty = 1.0; // Make sure it expands properly
+        c.gridheight = 2;
+        c.weighty = 1.0;
 
-        courseObjectiveField = new JTextArea(10, 40); // Large area
+        courseObjectiveField = new JTextArea(5, 40); // Adjusted size
         courseObjectiveField.setLineWrap(true);
         courseObjectiveField.setWrapStyleWord(true);
 
         JScrollPane objectiveScrollPane = new JScrollPane(courseObjectiveField);
+        objectiveScrollPane.setPreferredSize(new Dimension(300, 100)); // Adjusted height
+
         coursePanel.add(objectiveScrollPane, c);
 
         mainPanel.add(coursePanel, gbc);
+    }
 
-        // -------------------- COURSE SYLLABUS SECTION --------------------
-        gbc.gridx = 1;
-        gbc.gridwidth = 1;
+    private void createSyllabusRow(GridBagConstraints gbc) {
         JPanel syllabusPanel = new JPanel(new BorderLayout());
         syllabusPanel.setBorder(BorderFactory.createTitledBorder("Course Syllabus"));
 
@@ -119,6 +148,7 @@ public class TeacherCreateCoursePage implements Page {
         syllabusModel = new DefaultListModel<>();
         syllabusList = new JList<>(syllabusModel);
         JScrollPane syllabusScroll = new JScrollPane(syllabusList);
+        syllabusScroll.setPreferredSize(new Dimension(300, 150)); // Adjusted size
 
         JPanel syllabusInputPanel = new JPanel(new GridLayout(1, 3, 5, 5));
         syllabusInputPanel.add(syllabusInput);
@@ -130,6 +160,7 @@ public class TeacherCreateCoursePage implements Page {
 
         mainPanel.add(syllabusPanel, gbc);
     }
+
 
     // ----------- ROW 2: Levels ---------------
     private void createMiddleRow(GridBagConstraints gbc) {
@@ -211,9 +242,13 @@ public class TeacherCreateCoursePage implements Page {
         JButton addSubChapterBtn = new JButton("Add Sub-Chapter");
         addSubChapterBtn.addActionListener(e -> addSubChapter());
 
-        JPanel chapterButtonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        JButton removeNodeBtn = new JButton("Remove");
+        removeNodeBtn.addActionListener(e -> removeSelectedNode());
+
+        JPanel chapterButtonPanel = new JPanel(new GridLayout(1, 3, 10, 10));
         chapterButtonPanel.add(addChapterBtn);
         chapterButtonPanel.add(addSubChapterBtn);
+        chapterButtonPanel.add(removeNodeBtn); // Add the remove button
 
         chapterPanel.add(chapterScroll, BorderLayout.CENTER);
         chapterPanel.add(chapterButtonPanel, BorderLayout.SOUTH);
@@ -259,15 +294,59 @@ public class TeacherCreateCoursePage implements Page {
         mainPanel.add(chapterAndContentPanel, gbc);
     }
 
-    private void addSaveButton(GridBagConstraints gbc) {
+    private void createQuizRow(GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
-        gbc.weighty = 0.1;
+        gbc.weighty = 0.2;
+
+        JPanel quizPanel = new JPanel(new BorderLayout());
+        quizPanel.setBorder(BorderFactory.createTitledBorder("Quizzes for Levels"));
+
+        // List model for quizzes
+        DefaultListModel<String> quizModel = new DefaultListModel<>();
+        JList<String> quizList = new JList<>(quizModel);
+        quizList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane quizScroll = new JScrollPane(quizList);
+        quizScroll.setPreferredSize(new Dimension(400, 100));
+
+        // Buttons for quiz management
+        JButton createQuizBtn = new JButton("Create Quiz");
+        createQuizBtn.addActionListener(e -> createQuiz(quizModel));
+
+        JButton updateQuizBtn = new JButton("Update Quiz");
+        updateQuizBtn.addActionListener(e -> updateQuiz());
+
+        JButton removeQuizBtn = new JButton("Remove Quiz");
+        removeQuizBtn.addActionListener(e -> removeQuiz(quizModel));
+
+        JPanel quizButtonPanel = new JPanel(new FlowLayout());
+        quizButtonPanel.add(createQuizBtn);
+        quizButtonPanel.add(updateQuizBtn);
+        quizButtonPanel.add(removeQuizBtn);
+
+        quizPanel.add(quizScroll, BorderLayout.CENTER);
+        quizPanel.add(quizButtonPanel, BorderLayout.SOUTH);
+
+        mainPanel.add(quizPanel, gbc);
+    }
+
+    private void addSaveButton(GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy = 4; // Ensure it is placed below the quiz section
+        gbc.gridwidth = 2;
+        gbc.weighty = 0.1; // Give it some weight to make it visible
+        gbc.anchor = GridBagConstraints.PAGE_END; // Align it at the bottom
+
+        JPanel savePanel = new JPanel();
+        savePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         JButton saveButton = new JButton("Save Course");
+        saveButton.setPreferredSize(new Dimension(200, 40)); // Increase button size
         saveButton.addActionListener(e -> saveCourse());
-        mainPanel.add(saveButton, gbc);
+
+        savePanel.add(saveButton);
+        mainPanel.add(savePanel, gbc);
     }
 
     // ----------- METHODS: Add Levels, Chapters, Content ---------------
@@ -364,6 +443,27 @@ public class TeacherCreateCoursePage implements Page {
         }
     }
 
+    private void removeSelectedNode() {
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) chapterTree.getLastSelectedPathComponent();
+
+        if (selectedNode != null && !selectedNode.isRoot()) {
+            DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
+
+            // Confirm before deletion
+            int confirm = JOptionPane.showConfirmDialog(mainPanel, "Are you sure you want to delete this node?", "Confirm Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (parent != null) {
+                    parent.remove(selectedNode); // Remove from a tree
+                } else {
+                    rootNode.remove(selectedNode); // If no parent, remove from root
+                }
+                chapterTreeModel.reload();
+            }
+        } else {
+            JOptionPane.showMessageDialog(mainPanel, "Please select a node to remove.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private Chapter findChapterByTitle(String title) {
         Level selectedLevel = levelList.getSelectedValue();
         if (selectedLevel != null) {
@@ -387,6 +487,203 @@ public class TeacherCreateCoursePage implements Page {
             }
         }
         chapterTreeModel.reload();
+    }
+
+    private void createQuiz(DefaultListModel<String> quizModel) {
+        Level selectedLevel = levelList.getSelectedValue();
+        if (selectedLevel == null) {
+            JOptionPane.showMessageDialog(mainPanel, "Select a level first!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Check if the level already has a quiz
+        if (selectedLevel.getQuiz() != null) {
+            JOptionPane.showMessageDialog(mainPanel, "This level already has a quiz.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Create a new quiz
+        Quiz newQuiz = new Quiz();
+
+        // Add 10 empty questions (to be edited by the user)
+        for (int i = 0; i < 10; i++) {
+            newQuiz.addQuestion(new Question("Question " + (i + 1), new ArrayList<>(), 0));
+        }
+
+        selectedLevel.setQuiz(newQuiz);
+        quizModel.addElement("Quiz for Level: " + selectedLevel.getTitle());
+
+        // Open quiz editor UI
+        openQuizEditor(selectedLevel);
+    }
+
+    private void openQuizEditor(Level level) {
+        Quiz quiz = level.getQuiz();
+        if (quiz == null) return;
+
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(mainPanel), "Edit Quiz for Level: " + level.getTitle(), true);
+        dialog.setSize(600, 400);
+        dialog.setLayout(new BorderLayout());
+
+        DefaultListModel<String> questionModel = new DefaultListModel<>();
+        JList<String> questionList = new JList<>(questionModel);
+        JScrollPane scrollPane = new JScrollPane(questionList);
+
+        for (int i = 0; i < quiz.getQuestions().length; i++) {
+            Question q = quiz.getQuestions()[i];
+            if (q != null) {
+                questionModel.addElement(q.getQuestionText() + " (" + q.getChoices().size() + " choices)");
+            }
+        }
+
+        JButton editQuestionBtn = new JButton("Edit Question");
+        editQuestionBtn.addActionListener(e -> {
+            int selectedIndex = questionList.getSelectedIndex();
+            if (selectedIndex >= 0) {
+                editQuestion(quiz, selectedIndex, questionModel);
+            }
+        });
+
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(editQuestionBtn);
+
+        dialog.add(scrollPane, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+        dialog.setLocationRelativeTo(mainPanel);
+        dialog.setVisible(true);
+    }
+
+    private void editQuestion(Quiz quiz, int index, DefaultListModel<String> questionModel) {
+        if (index < 0 || index >= 10) {
+            JOptionPane.showMessageDialog(null, "Select a valid question to edit!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Question question = quiz.getQuestions()[index];
+        if (question == null) return;
+
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(mainPanel), "Edit Question " + (index + 1), true);
+        dialog.setSize(500, 400);
+        dialog.setLayout(new BorderLayout());
+
+        JTextField questionField = new JTextField(question.getQuestionText());
+        DefaultListModel<String> choiceModel = new DefaultListModel<>();
+        JList<String> choiceList = new JList<>(choiceModel);
+
+        // Load choices, marking the correct one
+        for (int i = 0; i < question.getChoices().size(); i++) {
+            String choiceText = question.getChoices().get(i);
+            if (i == question.getCorrectChoiceIndex()) {
+                choiceText += " ✅";  // Add icon to correct answer
+            }
+            choiceModel.addElement(choiceText);
+        }
+
+        JButton addChoiceBtn = new JButton("Add Choice");
+        addChoiceBtn.addActionListener(e -> {
+            String newChoice = JOptionPane.showInputDialog("Enter new choice:");
+            if (newChoice != null && !newChoice.trim().isEmpty()) {
+                choiceModel.addElement(newChoice);
+            }
+        });
+
+        JButton setCorrectBtn = new JButton("Set Correct Answer");
+        setCorrectBtn.addActionListener(e -> {
+            int selectedChoice = choiceList.getSelectedIndex();
+            if (selectedChoice >= 0) {
+                List<String> choices = new ArrayList<>();
+                for (int i = 0; i < choiceModel.getSize(); i++) {
+                    choices.add(choiceModel.getElementAt(i).replace(" ✅", "")); // Remove old icon
+
+                    if (i == selectedChoice) {
+                        choices.set(i, choices.get(i) + " ✅"); // Add ✅ to new correct choice
+                    }
+                }
+
+                // Update the question
+                quiz.getQuestions()[index] = new Question(
+                        questionField.getText(),
+                        choices,
+                        selectedChoice
+                );
+
+                choiceModel.clear();
+                for (String choice : choices) {
+                    choiceModel.addElement(choice);
+                }
+
+                JOptionPane.showMessageDialog(null, "Correct answer set!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        JButton saveQuestionBtn = new JButton("Save Question");
+        saveQuestionBtn.addActionListener(e -> {
+            // Convert DefaultListModel to List<String>
+            List<String> choices = new ArrayList<>();
+            for (int i = 0; i < choiceModel.getSize(); i++) {
+                choices.add(choiceModel.getElementAt(i));
+            }
+
+            // Save new question text
+            quiz.getQuestions()[index] = new Question(
+                    questionField.getText(),
+                    choices,
+                    quiz.getQuestions()[index].getCorrectChoiceIndex()
+            );
+
+            // Update the quiz editor UI immediately with the new title
+            questionModel.set(index, questionField.getText() + " (" + choices.size() + " choices)");
+
+            dialog.dispose();
+        });
+
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(addChoiceBtn);
+        buttonPanel.add(setCorrectBtn);
+        buttonPanel.add(saveQuestionBtn);
+
+        dialog.add(questionField, BorderLayout.NORTH);
+        dialog.add(new JScrollPane(choiceList), BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+        dialog.setLocationRelativeTo(mainPanel);
+        dialog.setVisible(true);
+    }
+
+    private void updateQuiz() {
+        Level selectedLevel = levelList.getSelectedValue();
+        if (selectedLevel == null) {
+            JOptionPane.showMessageDialog(mainPanel, "Select a level first!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Quiz quiz = selectedLevel.getQuiz();
+        if (quiz == null) {
+            JOptionPane.showMessageDialog(mainPanel, "No quiz found for this level.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Open quiz editor
+        openQuizEditor(selectedLevel);
+    }
+
+    private void removeQuiz(DefaultListModel<String> quizModel) {
+        Level selectedLevel = levelList.getSelectedValue();
+        if (selectedLevel == null) {
+            JOptionPane.showMessageDialog(mainPanel, "Select a level first!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (selectedLevel.getQuiz() == null) {
+            JOptionPane.showMessageDialog(mainPanel, "No quiz found for this level.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(mainPanel, "Are you sure you want to remove this quiz?", "Confirm Deletion", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (confirm == JOptionPane.YES_OPTION) {
+            selectedLevel.setQuiz(null);
+            quizModel.removeAllElements();
+            JOptionPane.showMessageDialog(mainPanel, "Quiz removed successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void saveCourse() {
@@ -451,6 +748,6 @@ public class TeacherCreateCoursePage implements Page {
 
     @Override
     public JPanel getPagePanel() {
-        return mainPanel;
+        return containerPanel;
     }
 }

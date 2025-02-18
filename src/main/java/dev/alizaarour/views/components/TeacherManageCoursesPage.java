@@ -6,8 +6,10 @@ import dev.alizaarour.services.CourseService;
 import dev.alizaarour.utils.Observer;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.util.List;
 
@@ -60,11 +62,14 @@ public class TeacherManageCoursesPage implements Page, Observer {
         coursesTable = new JTable(tableModel);
         coursesTable.setRowHeight(30);
 
-        // Set "Update" and "Delete" as buttons
-        coursesTable.getColumn("Update").setCellRenderer(new ButtonRenderer());
+        // Add row striping effect (alternate row colors)
+        coursesTable.setDefaultRenderer(Object.class, new RowStripeRenderer());
+
+        // Set "Update" and "Delete" as buttons with hover effect
+        coursesTable.getColumn("Update").setCellRenderer(new ButtonRenderer("Update"));
         coursesTable.getColumn("Update").setCellEditor(new ButtonEditor(new JCheckBox(), "Update", coursesTable));
 
-        coursesTable.getColumn("Delete").setCellRenderer(new ButtonRenderer());
+        coursesTable.getColumn("Delete").setCellRenderer(new ButtonRenderer("Delete"));
         coursesTable.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(), "Delete", coursesTable));
     }
 
@@ -97,28 +102,42 @@ public class TeacherManageCoursesPage implements Page, Observer {
     }
 
     /**
-     * Renderer for JButton inside JTable
+     * Renderer for JButton inside JTable with hover effect
      */
     private static class ButtonRenderer extends JButton implements TableCellRenderer {
-        public ButtonRenderer() {
+        private final String action;
+
+        public ButtonRenderer(String action) {
+            this.action = action;
             setOpaque(true);
+            setForeground(Color.WHITE);
+            setFocusPainted(false);
+            setBorderPainted(false);
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             setText((value == null) ? "" : value.toString());
+
+            // Set hover effect colors
+            if ("Delete".equals(action)) {
+                setBackground(new Color(220, 53, 69)); // Red
+            } else {
+                setBackground(new Color(0, 123, 255)); // Blue
+            }
+
             return this;
         }
     }
 
     /**
-     * Editor for JButton inside JTable
+     * Editor for JButton inside JTable with hover effect
      */
     private static class ButtonEditor extends DefaultCellEditor {
-        private JButton button;
-        private JTable table;
-        private String action;
-        private boolean isClicked;
+        private final JButton button;
+        private final JTable table;
+        private final String action;
 
         public ButtonEditor(JCheckBox checkBox, String action, JTable table) {
             super(checkBox);
@@ -126,6 +145,10 @@ public class TeacherManageCoursesPage implements Page, Observer {
             this.table = table;
             button = new JButton();
             button.setOpaque(true);
+            button.setForeground(Color.WHITE);
+            button.setFocusPainted(false);
+            button.setBorderPainted(false);
+            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
             button.addActionListener(e -> {
                 fireEditingStopped();
@@ -144,7 +167,14 @@ public class TeacherManageCoursesPage implements Page, Observer {
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             button.setText((value == null) ? "" : value.toString());
-            isClicked = true;
+
+            // Set hover effect colors
+            if ("Delete".equals(action)) {
+                button.setBackground(new Color(220, 53, 69)); // Red
+            } else {
+                button.setBackground(new Color(0, 123, 255)); // Blue
+            }
+
             return button;
         }
 
@@ -162,13 +192,33 @@ public class TeacherManageCoursesPage implements Page, Observer {
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
             );
-            if (confirmation == JOptionPane.YES_OPTION)
+            if (confirmation == JOptionPane.YES_OPTION) {
                 CourseService.getInstance().removeCourse(courseId);
-
+                JOptionPane.showMessageDialog(null, "Course deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
 
         private void updateCourse(int courseId) {
             JOptionPane.showMessageDialog(null, "Update functionality to be implemented.");
+        }
+    }
+
+    /**
+     * Custom row renderer for alternating row colors (striped effect)
+     */
+    private static class RowStripeRenderer extends DefaultTableCellRenderer {
+        private static final Color EVEN_ROW_COLOR = new Color(240, 240, 240); // Light Gray
+        private static final Color ODD_ROW_COLOR = Color.WHITE;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            if (!isSelected) {
+                component.setBackground(row % 2 == 0 ? EVEN_ROW_COLOR : ODD_ROW_COLOR);
+            }
+
+            return component;
         }
     }
 }
