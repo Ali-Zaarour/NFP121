@@ -1,9 +1,9 @@
 package dev.alizaarour.views.components;
 
 import dev.alizaarour.config.SessionManager;
-import dev.alizaarour.config.pack.ApplicationInitializer;
 import dev.alizaarour.models.*;
 import dev.alizaarour.services.CourseService;
+import dev.alizaarour.views.BaseFrame;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -12,8 +12,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeacherCreateCoursePage implements Page {
-    private JPanel containerPanel ,mainPanel;
+public class TeacherEditCoursePage extends BaseFrame {
+
+    private JPanel containerPanel, mainPanel;
     private JTextField syllabusInput, levelInput, contentField, courseTitleField;
     private DefaultListModel<String> syllabusModel;
     private JList<String> syllabusList;
@@ -25,8 +26,22 @@ public class TeacherCreateCoursePage implements Page {
     private DefaultMutableTreeNode rootNode;
     private JComboBox<String> contentTypeBox;
     private JTextArea courseObjectiveField;
+    private Course course; // The course being edited
+    private int courseId;
+    private DefaultListModel<String> quizModel;
 
-    public TeacherCreateCoursePage() {
+    public TeacherEditCoursePage(int courseId) {
+        super("update course", 1000, 800, false);
+
+        this.courseId = courseId; // Store the existing course
+        loadData(); // Load course data
+
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    }
+
+    @Override
+    protected void createComponents() {
         mainPanel = new JPanel(new GridBagLayout()); // Keep using GridBagLayout
         mainPanel.setPreferredSize(new Dimension(900, 1200)); // Ensure enough space
 
@@ -70,7 +85,7 @@ public class TeacherCreateCoursePage implements Page {
         gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        addSaveButton(gbc);
+        addUpdateButton(gbc);
 
         // Wrap `mainPanel` inside a `JScrollPane`
         JScrollPane scrollPane = new JScrollPane(mainPanel);
@@ -81,6 +96,8 @@ public class TeacherCreateCoursePage implements Page {
         // Add the scroll pane to a container panel for proper layout
         containerPanel = new JPanel(new BorderLayout());
         containerPanel.add(scrollPane, BorderLayout.CENTER);
+
+        setContentPane(containerPanel);
     }
 
     // ----------- ROW 1: Course Info + Syllabus ---------------
@@ -168,7 +185,6 @@ public class TeacherCreateCoursePage implements Page {
         gbc.weighty = 0.5; // Increased height for syllabus section
         mainPanel.add(syllabusPanel, gbc);
     }
-
 
     // ----------- ROW 2: Levels ---------------
     private void createMiddleRow(GridBagConstraints gbc) {
@@ -312,7 +328,7 @@ public class TeacherCreateCoursePage implements Page {
         quizPanel.setBorder(BorderFactory.createTitledBorder("Quizzes for Levels"));
 
         // List model for quizzes
-        DefaultListModel<String> quizModel = new DefaultListModel<>();
+        quizModel = new DefaultListModel<>();
         JList<String> quizList = new JList<>(quizModel);
         quizList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane quizScroll = new JScrollPane(quizList);
@@ -339,22 +355,22 @@ public class TeacherCreateCoursePage implements Page {
         mainPanel.add(quizPanel, gbc);
     }
 
-    private void addSaveButton(GridBagConstraints gbc) {
+    private void addUpdateButton(GridBagConstraints gbc) {
         gbc.gridx = 0;
-        gbc.gridy = 4; // Ensure it is placed below the quiz section
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
-        gbc.weighty = 0.1; // Give it some weight to make it visible
-        gbc.anchor = GridBagConstraints.PAGE_END; // Align it at the bottom
+        gbc.weighty = 0.1;
+        gbc.anchor = GridBagConstraints.PAGE_END;
 
-        JPanel savePanel = new JPanel();
-        savePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel updatePanel = new JPanel();
+        updatePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        JButton saveButton = new JButton("Save Course");
-        saveButton.setPreferredSize(new Dimension(200, 40)); // Increase button size
-        saveButton.addActionListener(e -> saveCourse());
+        JButton updateButton = new JButton("Update Course");
+        updateButton.setPreferredSize(new Dimension(200, 40));
+        updateButton.addActionListener(e -> updateCourse());
 
-        savePanel.add(saveButton);
-        mainPanel.add(savePanel, gbc);
+        updatePanel.add(updateButton);
+        mainPanel.add(updatePanel, gbc);
     }
 
     // ----------- METHODS: Add Levels, Chapters, Content ---------------
@@ -599,7 +615,7 @@ public class TeacherCreateCoursePage implements Page {
         setCorrectBtn.addActionListener(e -> {
             int selectedChoice = choiceList.getSelectedIndex();
             if (selectedChoice >= 0) {
-                List<String> choices = new ArrayList<>();
+                java.util.List<String> choices = new ArrayList<>();
                 for (int i = 0; i < choiceModel.getSize(); i++) {
                     choices.add(choiceModel.getElementAt(i).replace(" ✅", "")); // Remove old icon
 
@@ -627,7 +643,7 @@ public class TeacherCreateCoursePage implements Page {
         JButton saveQuestionBtn = new JButton("Save Question");
         saveQuestionBtn.addActionListener(e -> {
             // Convert DefaultListModel to List<String>
-            List<String> choices = new ArrayList<>();
+            java.util.List<String> choices = new ArrayList<>();
             for (int i = 0; i < choiceModel.getSize(); i++) {
                 choices.add(choiceModel.getElementAt(i));
             }
@@ -694,68 +710,75 @@ public class TeacherCreateCoursePage implements Page {
         }
     }
 
-    private void saveCourse() {
-        // Get course title and objective
-        String courseTitle = courseTitleField.getText().trim();
-        String courseObjective = courseObjectiveField.getText().trim();
-        String createdBy = SessionManager.getInstance().getUser().getEmail();
+    private void updateCourse() {
+        String updatedTitle = courseTitleField.getText().trim();
+        String updatedObjective = courseObjectiveField.getText().trim();
 
-        // Validate input
-        if (courseTitle.isEmpty()) {
+        if (updatedTitle.isEmpty()) {
             JOptionPane.showMessageDialog(mainPanel, "Please enter a course title.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Create a new Course object
-        Course newCourse = new Course(courseTitle, createdBy, courseObjective);
+        // Update existing `course` instead of creating a new one
+        course.setTitle(updatedTitle);
+        course.setObjective(updatedObjective);
 
-        // Set the syllabus
-        List<String> syllabusData = new ArrayList<>();
+        // Update syllabus
+        List<String> updatedSyllabus = new ArrayList<>();
         for (int i = 0; i < syllabusModel.size(); i++) {
-            syllabusData.add(syllabusModel.get(i));
+            updatedSyllabus.add(syllabusModel.get(i));
         }
-        newCourse.setSyllabus(syllabusData); // Store syllabus properly
+        course.setSyllabus(updatedSyllabus);
 
-        // Add all levels to the course
+        // Update levels
+        List<Level> updatedLevels = new ArrayList<>();
         for (int i = 0; i < levelModel.size(); i++) {
-            Level level = levelModel.get(i);
-            newCourse.getLevels().add(level);
+            updatedLevels.add(levelModel.get(i));
         }
+        course.setLevels(updatedLevels);
 
-        // Simulate saving to a database (replace with actual DB logic if needed)
-        System.out.println("Course Saved: " + newCourse);
-        if (ApplicationInitializer.dataSchema.getCourses() == null) {
-            ApplicationInitializer.dataSchema.setCourses(new ArrayList<>());
-        }
+        // Update course in the database
+        CourseService.getInstance().updateCourse(courseId, course);
 
-        CourseService.getInstance().addCourse(newCourse);
+        // Save changes
+        JOptionPane.showMessageDialog(mainPanel, "Course updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-        // Show a success message
-        JOptionPane.showMessageDialog(mainPanel, "Done! Course has been saved.", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-        // Clear all components to allow a new course creation
-        clearAllFields();
+        // Refresh UI if needed
+        dispose(); // Close the editor after updating
     }
 
-    private void clearAllFields() {
-        courseTitleField.setText("");
-        courseObjectiveField.setText("");
+    // ----------- INITIALIZATION ---------------
+    private void loadData(){
+        this.course = CourseService.getInstance().getCourseById(courseId);
 
+        // Fill title and objective
+        courseTitleField.setText(course.getTitle());
+        courseObjectiveField.setText(course.getObjective());
+
+        // Populate syllabus list
         syllabusModel.clear();
-        syllabusInput.setText("");
+        for (String item : course.getSyllabus()) {
+            syllabusModel.addElement(item);
+        }
 
+        // Populate levels
         levelModel.clear();
-        levelInput.setText("");
-        feeSpinner.setValue(100.0);
+        for (Level level : course.getLevels()) {
+            levelModel.addElement(level);
+        }
 
-        rootNode.removeAllChildren(); // Clear the Chapter Tree
-        chapterTreeModel.reload();
+        // Populate Quizzes
+        quizModel.clear(); // Clear previous items before reloading
+        for (Level level : course.getLevels()) {
+            if (level.getQuiz() != null) {
+                quizModel.addElement("Quiz for Level: " + level.getTitle());
+            }
+        }
 
-        contentField.setText("");
+
     }
 
     @Override
-    public JPanel getPagePanel() {
-        return containerPanel;
+    protected void initVariable() {
     }
 }

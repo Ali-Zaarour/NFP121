@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.util.List;
 
@@ -199,7 +198,7 @@ public class TeacherManageCoursesPage implements Page, Observer {
         }
 
         private void updateCourse(int courseId) {
-            JOptionPane.showMessageDialog(null, "Update functionality to be implemented.");
+            new TeacherEditCoursePage(courseId);
         }
     }
 
