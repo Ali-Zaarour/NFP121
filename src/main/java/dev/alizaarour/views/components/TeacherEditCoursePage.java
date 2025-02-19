@@ -748,7 +748,7 @@ public class TeacherEditCoursePage extends BaseFrame {
     }
 
     // ----------- INITIALIZATION ---------------
-    private void loadData(){
+    private void loadData() {
         this.course = CourseService.getInstance().getCourseById(courseId);
 
         // Fill title and objective

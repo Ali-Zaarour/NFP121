@@ -19,7 +19,7 @@ public class CourseService extends Observable {
     }
 
     public void addCourse(Course newCourse) {
-        ApplicationInitializer.dataSchema.addC(newCourse);
+        ApplicationInitializer.dataSchema.getCourses().add(newCourse);
         notifyObservers();
     }
 
@@ -52,7 +52,7 @@ public class CourseService extends Observable {
     // replace a course object with a new one by id
     public void updateCourse(int courseID, Course newCourse) {
         ApplicationInitializer.dataSchema.getCourses().removeIf(course -> course.getPk() == courseID);
-        ApplicationInitializer.dataSchema.addC(newCourse);
+        ApplicationInitializer.dataSchema.getCourses().add(newCourse);
         notifyObservers();
     }
 }

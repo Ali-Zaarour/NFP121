@@ -42,4 +42,9 @@ public class Course implements Serializable {
         this.pk = ApplicationInitializer.dataSchema.getCourseSeq() + 1;
         ApplicationInitializer.dataSchema.setCourseSeq(ApplicationInitializer.dataSchema.getCourseSeq() + 1);
     }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }

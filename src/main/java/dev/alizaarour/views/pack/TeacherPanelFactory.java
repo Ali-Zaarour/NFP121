@@ -17,8 +17,7 @@ public class TeacherPanelFactory extends PanelFactory {
         return List.of(
                 SidebarPanel.createSidebarButton("Manage Courses", new NavigateToPageCommand(mainContent, PageName.TEACHER_MANAGE_COURSES)),
                 SidebarPanel.createSidebarButton("Create Courses", new NavigateToPageCommand(mainContent, PageName.TEACHER_CREATE_COURSE)),
-                SidebarPanel.createSidebarButton("Student Evaluations", new NavigateToPageCommand(mainContent, PageName.TEACHER_EVALUATIONS)),
-                SidebarPanel.createSidebarButton("Attendance", new NavigateToPageCommand(mainContent, PageName.TEACHER_ATTENDANCE)),
+                SidebarPanel.createSidebarButton("Manage Meeting", new NavigateToPageCommand(mainContent, PageName.TEACHER_MANAGE_MEETING)),
                 SidebarPanel.createSidebarButton("Profile", new NavigateToPageCommand(mainContent, PageName.PROFILE))
         );
     }

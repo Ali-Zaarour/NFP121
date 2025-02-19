@@ -14,6 +14,9 @@ public class Main {
             for (User user : ApplicationInitializer.dataSchema.getUsers()) {
                 System.out.println(user);
             }
+            if (ApplicationInitializer.dataSchema.getMeetings()== null){
+                ApplicationInitializer.dataSchema.setMeetings(new ArrayList<>());
+            }
 
             if (ApplicationInitializer.dataSchema.getCourses()== null){
                 ApplicationInitializer.dataSchema.setCourses(new ArrayList<>());

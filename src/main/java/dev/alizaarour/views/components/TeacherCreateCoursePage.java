@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherCreateCoursePage implements Page {
-    private JPanel containerPanel ,mainPanel;
+    private JPanel containerPanel, mainPanel;
     private JTextField syllabusInput, levelInput, contentField, courseTitleField;
     private DefaultListModel<String> syllabusModel;
     private JList<String> syllabusList;

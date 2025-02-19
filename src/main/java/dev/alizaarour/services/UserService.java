@@ -7,8 +7,10 @@ import dev.alizaarour.utils.Observable;
 import lombok.Getter;
 
 import javax.swing.*;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Getter
 public class UserService extends Observable {
@@ -50,5 +52,12 @@ public class UserService extends Observable {
 
         notifyObservers();
         return true;
+    }
+
+    public <T extends User> List<T> getUsersByType(Class<T> type) {
+        return ApplicationInitializer.dataSchema.getUsers().stream()
+                .filter(type::isInstance)
+                .map(type::cast)
+                .collect(Collectors.toList());
     }
 }

@@ -30,8 +30,7 @@ public class TeacherHome extends BaseFrame {
 
         mainContent.addPage(PageName.TEACHER_MANAGE_COURSES);
         mainContent.addPage(PageName.TEACHER_CREATE_COURSE);
-        mainContent.addPage(PageName.TEACHER_EVALUATIONS);
-        mainContent.addPage(PageName.TEACHER_ATTENDANCE);
+        mainContent.addPage(PageName.TEACHER_MANAGE_MEETING);
         mainContent.addPage(PageName.PROFILE);
 
         add(mainContent, BorderLayout.CENTER);

@@ -18,8 +18,7 @@ public class PageFactory {
                 case STUDENT_RESULTS -> new StudentResultsPage();
                 case TEACHER_MANAGE_COURSES -> new TeacherManageCoursesPage();
                 case TEACHER_CREATE_COURSE -> new TeacherCreateCoursePage();
-                case TEACHER_EVALUATIONS -> new TeacherEvaluationsPage();
-                case TEACHER_ATTENDANCE -> new TeacherAttendancePage();
+                case TEACHER_MANAGE_MEETING -> new TeacherManageMeeting();
                 case PROFILE -> new UserInfoPage();
                 default -> () -> {
                     JPanel panel = new JPanel();
