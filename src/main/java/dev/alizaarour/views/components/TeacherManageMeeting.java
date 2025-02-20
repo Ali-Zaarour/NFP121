@@ -276,15 +276,27 @@ public class TeacherManageMeeting implements Page, Observer {
 
     private void openMeetingModal() {
         int selectedIndex = activeMeetingsList.getSelectedIndex();
-        if (selectedIndex != -1) {
-            String selectedMeetingText = activeMeetingsListModel.getElementAt(selectedIndex);
-            JOptionPane.showMessageDialog(mainPanel,
-                    "Meeting Details: \n" + selectedMeetingText,
-                    "Active Meeting", JOptionPane.INFORMATION_MESSAGE);
-        } else {
+        if (selectedIndex == -1) {
             JOptionPane.showMessageDialog(mainPanel, "Please select a meeting to join.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+
+        // Extract meeting ID from selected text
+        String selectedMeetingText = activeMeetingsListModel.getElementAt(selectedIndex);
+        String meetingIdText = selectedMeetingText.split(" ")[1]; // Extracts meeting ID
+        int meetingId = Integer.parseInt(meetingIdText);
+
+        Meeting meeting = MeetingService.getInstance().getMeetingById(meetingId);
+        if (meeting == null) {
+            JOptionPane.showMessageDialog(mainPanel, "Meeting not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ Open the modal Meeting UI Dialog
+        new MeetingFrame((JFrame) SwingUtilities.getWindowAncestor(mainPanel), meeting);
     }
+
+
 
     private void startAutoRefresh() {
         Timer timer = new Timer(60000, e -> {
