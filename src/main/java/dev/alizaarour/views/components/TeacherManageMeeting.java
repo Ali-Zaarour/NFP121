@@ -10,8 +10,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public class TeacherManageMeeting implements Page, Observer {
@@ -110,7 +108,7 @@ public class TeacherManageMeeting implements Page, Observer {
         gbc.gridwidth = 2;
         gbc.weighty = 0.9;
 
-        String[] columnNames = {"ID", "Date", "Time", "Duration", "Teacher", "Course", "Level","Status", "Update", "Delete"};
+        String[] columnNames = {"ID", "Date", "Time", "Duration", "Teacher", "Course", "Level", "Status", "Update", "Delete"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -260,21 +258,7 @@ public class TeacherManageMeeting implements Page, Observer {
 
     private void loadActiveMeetings() {
         activeMeetingsListModel.clear();
-        LocalDate today = LocalDate.now();
-        LocalTime now = LocalTime.now();
-
-        List<Meeting> activeMeetings = MeetingService.getInstance().getMeetingsForCurrentTeacher().stream()
-                .filter(m -> Boolean.FALSE.equals(m.getDone()))
-                .filter(m -> m.getDate().equals(today))
-                .filter(m -> {
-                    LocalTime startTime = m.getTime();
-                    LocalTime endTime = startTime.plusMinutes(m.getDuration());
-                    return (now.equals(startTime) || now.isAfter(startTime)) &&
-                            (now.equals(endTime) || now.isBefore(endTime));
-                })
-                .toList();
-
-        for (Meeting meeting : activeMeetings) {
+        for (Meeting meeting : MeetingService.getInstance().getActiveMeetings()) {
             String courseName = CourseService.getInstance().getCourseById(meeting.getCourseId()).getTitle();
             String level = "Level " + meeting.getCourseLevelId();
             int studentCount = meeting.getStudentIds().size();

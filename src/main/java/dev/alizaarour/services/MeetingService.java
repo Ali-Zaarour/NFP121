@@ -112,5 +112,18 @@ public class MeetingService extends Observable {
         }
     }
 
-
+    public List<Meeting> getActiveMeetings() {
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+        return MeetingService.getInstance().getMeetingsForCurrentTeacher().stream()
+                .filter(m -> Boolean.FALSE.equals(m.getDone()))
+                .filter(m -> m.getDate().equals(today))
+                .filter(m -> {
+                    LocalTime startTime = m.getTime();
+                    LocalTime endTime = startTime.plusMinutes(m.getDuration());
+                    return (now.equals(startTime) || now.isAfter(startTime)) &&
+                            (now.equals(endTime) || now.isBefore(endTime));
+                })
+                .toList();
+    }
 }
