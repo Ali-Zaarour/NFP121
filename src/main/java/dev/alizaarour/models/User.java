@@ -1,5 +1,6 @@
 package dev.alizaarour.models;
 
+import dev.alizaarour.models.helper.Role;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

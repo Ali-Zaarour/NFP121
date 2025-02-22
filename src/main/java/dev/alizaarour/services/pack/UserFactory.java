@@ -1,6 +1,6 @@
-package dev.alizaarour.services;
+package dev.alizaarour.services.pack;
 
-import dev.alizaarour.models.Role;
+import dev.alizaarour.models.helper.Role;
 import dev.alizaarour.models.Student;
 import dev.alizaarour.models.Teacher;
 import dev.alizaarour.models.User;

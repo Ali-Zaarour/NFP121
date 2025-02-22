@@ -2,6 +2,7 @@ package dev.alizaarour.views.components;
 
 import dev.alizaarour.config.SessionManager;
 import dev.alizaarour.models.*;
+import dev.alizaarour.models.helper.CourseContentFactory;
 import dev.alizaarour.services.CourseService;
 import dev.alizaarour.views.BaseFrame;
 

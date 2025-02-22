@@ -1,10 +1,7 @@
-package dev.alizaarour.services;
+package dev.alizaarour.services.pack;
 
-import dev.alizaarour.models.Role;
+import dev.alizaarour.models.helper.Role;
 import dev.alizaarour.models.User;
-import dev.alizaarour.services.pack.LoginRedirectionStrategy;
-import dev.alizaarour.services.pack.StudentRedirectStrategy;
-import dev.alizaarour.services.pack.TeacherRedirectStrategy;
 
 import java.util.HashMap;
 import java.util.Map;

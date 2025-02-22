@@ -1,4 +1,6 @@
-package dev.alizaarour.models;
+package dev.alizaarour.models.helper;
+
+import dev.alizaarour.models.*;
 
 public class CourseContentFactory {
     public static CourseContent createContent(ContentType type, String content) {

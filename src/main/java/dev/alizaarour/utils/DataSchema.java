@@ -20,6 +20,7 @@ public class DataSchema extends Observable implements Serializable {
     private int userSeq;
     private int courseSeq;
     private int meetingSeq;
+    private int courseProcessSeq;
     private List<User> users;
     private List<Course> courses;
     private List<Meeting> meetings;

@@ -1,8 +1,8 @@
 package dev.alizaarour.views;
 
 import dev.alizaarour.config.pack.ApplicationInitializer;
-import dev.alizaarour.models.Role;
-import dev.alizaarour.services.UserFactory;
+import dev.alizaarour.models.helper.Role;
+import dev.alizaarour.services.pack.UserFactory;
 import dev.alizaarour.services.UserService;
 
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package dev.alizaarour.config;
 
 import dev.alizaarour.models.User;
-import dev.alizaarour.services.LoginRedirectContext;
+import dev.alizaarour.services.pack.LoginRedirectContext;
 import dev.alizaarour.services.UserService;
 import dev.alizaarour.views.BaseFrame;
 import dev.alizaarour.views.Login;
