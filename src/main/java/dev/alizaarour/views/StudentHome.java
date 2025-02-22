@@ -30,6 +30,8 @@ public class StudentHome extends BaseFrame {
 
         mainContent.addPage(PageName.STUDENT_DASHBOARD);
         mainContent.addPage(PageName.STUDENT_COURSES);
+        mainContent.addPage(PageName.STUDENT_MEETINGS);
+        mainContent.addPage(PageName.STUDENT_PAYMENT);
         mainContent.addPage(PageName.STUDENT_RESULTS);
         mainContent.addPage(PageName.PROFILE);
 

@@ -15,6 +15,8 @@ public class PageFactory {
             return switch (key) {
                 case STUDENT_DASHBOARD -> new StudentDashboardPage();
                 case STUDENT_COURSES -> new StudentCoursesPage();
+                case STUDENT_MEETINGS -> new StudentManageMeeting();
+                case STUDENT_PAYMENT -> new StudentPaymentHistory();
                 case STUDENT_RESULTS -> new StudentResultsPage();
                 case TEACHER_MANAGE_COURSES -> new TeacherManageCoursesPage();
                 case TEACHER_CREATE_COURSE -> new TeacherCreateCoursePage();

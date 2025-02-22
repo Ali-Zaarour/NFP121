@@ -17,9 +17,10 @@ public class StudentPanelFactory extends PanelFactory {
         return List.of(
                 SidebarPanel.createSidebarButton("Dashboard", new NavigateToPageCommand(mainContent, PageName.STUDENT_DASHBOARD)),
                 SidebarPanel.createSidebarButton("My Courses", new NavigateToPageCommand(mainContent, PageName.STUDENT_COURSES)),
+                SidebarPanel.createSidebarButton("Meeting", new NavigateToPageCommand(mainContent, PageName.STUDENT_MEETINGS)),
+                SidebarPanel.createSidebarButton("Payment History", new NavigateToPageCommand(mainContent, PageName.STUDENT_PAYMENT)),
                 SidebarPanel.createSidebarButton("Results", new NavigateToPageCommand(mainContent, PageName.STUDENT_RESULTS)),
                 SidebarPanel.createSidebarButton("Profile", new NavigateToPageCommand(mainContent, PageName.PROFILE))
-
         );
     }
 }
