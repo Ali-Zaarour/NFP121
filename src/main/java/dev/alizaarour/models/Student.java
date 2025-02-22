@@ -1,6 +1,7 @@
 package dev.alizaarour.models;
 
 import dev.alizaarour.config.pack.ApplicationInitializer;
+import dev.alizaarour.models.helper.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +19,7 @@ public class Student extends User {
     private static final long serialVersionUID = 1L;
 
     public Student(String name, String email, String psw, Role role) {
-        super(ApplicationInitializer.dataSchema.getUserSeq() + 1, name, email, psw, Role.STUDENT);
+        super(ApplicationInitializer.dataSchema.getUserSeq() + 1, name, email, psw, role);
         ApplicationInitializer.dataSchema.setUserSeq(ApplicationInitializer.dataSchema.getUserSeq() + 1);
     }
 }
