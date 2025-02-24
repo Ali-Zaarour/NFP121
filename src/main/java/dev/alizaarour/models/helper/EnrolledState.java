@@ -2,7 +2,9 @@ package dev.alizaarour.models.helper;
 
 import dev.alizaarour.models.CourseProcess;
 
-public class EnrolledState implements CourseProcessState {
+import java.io.Serializable;
+
+public class EnrolledState implements CourseProcessState, Serializable {
     @Override
     public void nextState(CourseProcess context) {
         if (context.isPaid()) {

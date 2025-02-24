@@ -20,6 +20,19 @@ public class CourseProcessService extends Observable {
         return instance;
     }
 
+    //create a new course process
+    public int createCourseProcess(int courseId, int levelId) {
+        //get current user details
+        User activeUser = UserService.getInstance().getActiveUser();
+        if (activeUser instanceof Student) {
+            var newCourse = new CourseProcess(courseId, levelId);
+            ((Student) activeUser).getCourseProcesses().add(newCourse);
+            notifyObservers();
+            return newCourse.getProcessId();
+        }
+        return -1;
+    }
+
     // Get the course process by its id.
     public CourseProcess getCourseProcess(int courseProcessId) {
         //get current user details

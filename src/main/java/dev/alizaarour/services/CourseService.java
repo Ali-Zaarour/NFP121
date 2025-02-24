@@ -55,4 +55,41 @@ public class CourseService extends Observable {
         ApplicationInitializer.dataSchema.getCourses().add(newCourse);
         notifyObservers();
     }
+
+    public int getTotalCourses() {
+        return ApplicationInitializer.dataSchema.getCourses().size();
+    }
+
+    public Object[][] getCourses() {
+        //String[] columnNames = {"Num", "Title", "Created By", "Levels", "Enrolled", "Action"};
+        Object[][] courses = new Object[ApplicationInitializer.dataSchema.getCourses().size()][6];
+        for (int i = 0; i < ApplicationInitializer.dataSchema.getCourses().size(); i++) {
+            courses[i][0] = ApplicationInitializer.dataSchema.getCourses().get(i).getPk();
+            courses[i][1] = ApplicationInitializer.dataSchema.getCourses().get(i).getTitle();
+            int finalI = i;
+            courses[i][2] = UserService.getInstance()
+                    .findUserWithCondition(u -> u.getEmail()
+                            .equals(ApplicationInitializer
+                                    .dataSchema
+                                    .getCourses()
+                                    .get(finalI)
+                                    .getCreatedBy())
+                    ).get().getName();
+            courses[i][3] = ApplicationInitializer.dataSchema.getCourses().get(i).getLevels().size();
+            courses[i][4] = ApplicationInitializer.dataSchema.getCourses().get(i).getStudentsEnrolled().size();
+            courses[i][5] = "Enroll";
+        }
+        return courses;
+    }
+
+    public void addNewEnrolledUser(int courseId){
+        var course = getCourseById(courseId);
+        var currentUserId = UserService.getInstance().getActiveUser().getUserId();
+        for (Integer id : course.getStudentsEnrolled()){
+            if (currentUserId == id)
+                return;
+        }
+        course.getStudentsEnrolled().add(currentUserId);
+        notifyObservers();
+    }
 }

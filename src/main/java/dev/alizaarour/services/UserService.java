@@ -2,6 +2,8 @@ package dev.alizaarour.services;
 
 import dev.alizaarour.config.SessionManager;
 import dev.alizaarour.config.pack.ApplicationInitializer;
+import dev.alizaarour.models.CourseProcess;
+import dev.alizaarour.models.Student;
 import dev.alizaarour.models.User;
 import dev.alizaarour.utils.Observable;
 import lombok.Getter;
@@ -59,5 +61,15 @@ public class UserService extends Observable {
                 .filter(type::isInstance)
                 .map(type::cast)
                 .collect(Collectors.toList());
+    }
+
+    //check if a student already had taken this course and this level
+    public boolean checkIfAlreadyEnrolled(int courseId, int levelId) {
+        var user = getActiveUser();
+        if (user instanceof Student)
+            for (CourseProcess process : ((Student) user).getCourseProcesses())
+                if (process.getCourseId() == courseId && process.getLevelId() == levelId)
+                    return false;
+        return true;
     }
 }
