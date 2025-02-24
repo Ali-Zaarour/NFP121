@@ -27,5 +27,6 @@ public class PaymentService extends Observable {
             courseProcess.setPaymentDate(LocalDate.now());
             courseProcess.setPaymentFees(fees);
         } else JOptionPane.showMessageDialog(null, "Payment failed.");
+        notifyObservers();
     }
 }

@@ -3,6 +3,7 @@ package dev.alizaarour.views.components;
 import dev.alizaarour.config.SessionManager;
 import dev.alizaarour.config.pack.ApplicationInitializer;
 import dev.alizaarour.models.*;
+import dev.alizaarour.models.helper.ContentType;
 import dev.alizaarour.models.helper.CourseContentFactory;
 import dev.alizaarour.services.CourseService;
 

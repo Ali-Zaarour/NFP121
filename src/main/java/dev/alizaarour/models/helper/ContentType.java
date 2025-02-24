@@ -1,4 +1,4 @@
-package dev.alizaarour.models;
+package dev.alizaarour.models.helper;
 
 import lombok.Getter;
 
