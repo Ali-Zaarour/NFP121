@@ -17,7 +17,7 @@ public class CourseProcess implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    
+
     private int processId;
     private int courseId;
     private int levelId;
@@ -25,6 +25,7 @@ public class CourseProcess implements Serializable {
     private double paymentFees;
     private boolean paid;
     private LocalDate paymentDate;
+    private String paymentType;
     private boolean quizDone;
     private LocalDate quizDate;
     private double quizNote;

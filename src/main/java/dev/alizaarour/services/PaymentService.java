@@ -1,6 +1,7 @@
 package dev.alizaarour.services;
 
 import dev.alizaarour.services.pack.PaymentStrategy;
+import dev.alizaarour.services.pack.VisaPaymentStrategy;
 import dev.alizaarour.utils.Observable;
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ public class PaymentService extends Observable {
             courseProcess.setPaymentDate(LocalDate.now());
             courseProcess.setPaymentFees(fees);
             CourseService.getInstance().addNewEnrolledUser(courseProcess.getCourseId());
+            courseProcess.setPaymentType(paymentStrategy instanceof VisaPaymentStrategy ? "Visa" : "OMT");
         } else JOptionPane.showMessageDialog(null, "Payment failed.");
         notifyObservers();
     }
