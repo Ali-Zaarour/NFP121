@@ -17,12 +17,13 @@ import java.util.stream.Collectors;
 
 public class MeetingService extends Observable {
 
-    private static final MeetingService instance = new MeetingService();
+    private static MeetingService instance = new MeetingService();
 
     private MeetingService() {
     }
 
     public static synchronized MeetingService getInstance() {
+        if (instance == null) instance = new MeetingService();
         return instance;
     }
 
@@ -169,5 +170,11 @@ public class MeetingService extends Observable {
                             (now.equals(endTime) || now.isBefore(endTime));
                 })
                 .toList();
+    }
+
+    //clean
+    public void clean() {
+        if (instance != null)
+            instance = null;
     }
 }

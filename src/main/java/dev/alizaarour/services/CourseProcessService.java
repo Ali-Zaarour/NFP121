@@ -11,12 +11,13 @@ import dev.alizaarour.utils.Observable;
 
 public class CourseProcessService extends Observable {
 
-    private static final CourseProcessService instance = new CourseProcessService();
+    private static CourseProcessService instance = new CourseProcessService();
 
     private CourseProcessService() {
     }
 
     public static synchronized CourseProcessService getInstance() {
+        if (instance == null) instance = new CourseProcessService();
         return instance;
     }
 
@@ -60,6 +61,13 @@ public class CourseProcessService extends Observable {
         return index;
     }
 
+    //go to the next state
+    public void nextState(int processId) {
+        var process = getCourseProcess(processId);
+        process.nextState();
+        notifyObservers();
+    }
+
     // Generic method to accept a visitor over the active student's course processes.
     public void acceptVisitor(CourseProcessVisitor visitor) {
         User activeUser = UserService.getInstance().getActiveUser();
@@ -89,4 +97,9 @@ public class CourseProcessService extends Observable {
         return visitor.getCount();
     }
 
+    //clean
+    public void clean() {
+        if (instance != null)
+            instance = null;
+    }
 }

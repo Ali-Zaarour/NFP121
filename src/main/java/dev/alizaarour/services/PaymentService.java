@@ -9,15 +9,15 @@ import java.time.LocalDate;
 
 public class PaymentService extends Observable {
 
-    private static final PaymentService instance = new PaymentService();
+    private static PaymentService instance = new PaymentService();
 
     private PaymentService() {
     }
 
     public static synchronized PaymentService getInstance() {
+        if (instance == null) instance = new PaymentService();
         return instance;
     }
-
 
     // Process payment using the provided PaymentStrategy.
     public void processPayment(int courseProcessId, double fees, PaymentStrategy paymentStrategy) {
@@ -31,5 +31,11 @@ public class PaymentService extends Observable {
             courseProcess.setPaymentType(paymentStrategy instanceof VisaPaymentStrategy ? "Visa" : "OMT");
         } else JOptionPane.showMessageDialog(null, "Payment failed.");
         notifyObservers();
+    }
+
+    //clean
+    public void clean() {
+        if (instance != null)
+            instance = null;
     }
 }

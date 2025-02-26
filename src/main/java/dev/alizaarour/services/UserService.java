@@ -16,12 +16,13 @@ import java.util.stream.Collectors;
 
 @Getter
 public class UserService extends Observable {
-    private static final UserService instance = new UserService();
+    private static UserService instance = new UserService();
 
     private UserService() {
     }
 
     public static synchronized UserService getInstance() {
+        if (instance == null) instance = new UserService();
         return instance;
     }
 
@@ -71,5 +72,11 @@ public class UserService extends Observable {
                 if (process.getCourseId() == courseId && process.getLevelId() == levelId)
                     return false;
         return true;
+    }
+
+    //clean
+    public void clean() {
+        if (instance != null)
+            instance = null;
     }
 }

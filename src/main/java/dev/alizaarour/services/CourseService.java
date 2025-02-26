@@ -9,12 +9,13 @@ import java.util.List;
 
 public class CourseService extends Observable {
 
-    private static final CourseService instance = new CourseService();
+    private static CourseService instance = new CourseService();
 
     private CourseService() {
     }
 
     public static synchronized CourseService getInstance() {
+        if (instance == null) instance = new CourseService();
         return instance;
     }
 
@@ -87,14 +88,20 @@ public class CourseService extends Observable {
         return courses;
     }
 
-    public void addNewEnrolledUser(int courseId){
+    public void addNewEnrolledUser(int courseId) {
         var course = getCourseById(courseId);
         var currentUserId = UserService.getInstance().getActiveUser().getUserId();
-        for (Integer id : course.getStudentsEnrolled()){
+        for (Integer id : course.getStudentsEnrolled()) {
             if (currentUserId == id)
                 return;
         }
         course.getStudentsEnrolled().add(currentUserId);
         notifyObservers();
+    }
+
+    //clean
+    public void clean() {
+        if (instance != null)
+            instance = null;
     }
 }
