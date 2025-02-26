@@ -46,6 +46,20 @@ public class CourseProcessService extends Observable {
         return null;
     }
 
+    //get an array of int with the current course taken level
+    public int getTheIdForTheNextLevel(int courseId) {
+        User currentUser = UserService.getInstance().getActiveUser();
+        int index = 0;
+        if (currentUser instanceof Student) {
+            var x = ((Student) currentUser).getCourseProcesses();
+            for (CourseProcess courseProcess : x) {
+                if (courseProcess.getCourseId() == courseId)
+                    index++;
+            }
+        }
+        return index;
+    }
+
     // Generic method to accept a visitor over the active student's course processes.
     public void acceptVisitor(CourseProcessVisitor visitor) {
         User activeUser = UserService.getInstance().getActiveUser();

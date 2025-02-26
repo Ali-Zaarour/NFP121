@@ -57,7 +57,12 @@ public class CourseService extends Observable {
     }
 
     public int getTotalCourses() {
-        return ApplicationInitializer.dataSchema.getCourses().size();
+        int ttl = 0;
+        var c = ApplicationInitializer.dataSchema.getCourses();
+        for (Course course : c)
+            for (int j = 0; j < course.getLevels().size(); j++)
+                ttl++;
+        return ttl;
     }
 
     public Object[][] getCourses() {

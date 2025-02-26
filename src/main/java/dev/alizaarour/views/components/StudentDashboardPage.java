@@ -95,7 +95,7 @@ public class StudentDashboardPage implements Page, Observer {
         summaryPanel.removeAll();
 
         totalCoursesBox = createSummaryBox("Total Courses", "" + CourseService.getInstance().getTotalCourses());
-        currentCoursesBox = createSummaryBox("Current Courses", "" + CourseProcessService.getInstance().getTotalEnrolledCourses());
+        currentCoursesBox = createSummaryBox("My Courses", "" + CourseProcessService.getInstance().getTotalEnrolledCourses());
         doneCoursesBox = createSummaryBox("Completed Courses", "" + CourseProcessService.getInstance().getTotalDoneCourses());
 
         summaryPanel.add(totalCoursesBox);
@@ -106,7 +106,7 @@ public class StudentDashboardPage implements Page, Observer {
         summaryPanel.repaint();
     }
 
-    class ButtonRenderer extends JButton implements TableCellRenderer {
+    static class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
         }
@@ -119,8 +119,8 @@ public class StudentDashboardPage implements Page, Observer {
         }
     }
 
-    class ButtonEditor extends DefaultCellEditor {
-        private JButton button;
+    static class ButtonEditor extends DefaultCellEditor {
+        private final JButton button;
         private String label;
         private boolean isPushed;
         private int selectedRow;
@@ -129,11 +129,7 @@ public class StudentDashboardPage implements Page, Observer {
             super(checkBox);
             button = new JButton();
             button.setOpaque(true);
-            button.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    fireEditingStopped();
-                }
-            });
+            button.addActionListener(e -> fireEditingStopped());
         }
 
         @Override
@@ -164,7 +160,7 @@ public class StudentDashboardPage implements Page, Observer {
         private void openEnrollmentDialog(int courseId) {
             // Retrieve the course based on the passed courseId.
             var currentCourse = CourseService.getInstance().getCourseById(courseId);
-            if (currentCourse.getLevels().size() == 0 || currentCourse.getLevels() == null) {
+            if (currentCourse.getLevels().isEmpty() || currentCourse.getLevels() == null) {
                 JOptionPane.showMessageDialog(null, "No levels available for this course.");
                 return;
             }
@@ -224,11 +220,10 @@ public class StudentDashboardPage implements Page, Observer {
                 // Enroll button.
                 JButton enrollButton = new JButton("Enroll");
                 enrollButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-                enrollButton.addActionListener(e -> {
-                    openPaymentDialog(dialog, courseId, currentLevel.getNum(), currentLevel.getFees());
-                });
+                enrollButton.addActionListener(e -> openPaymentDialog(dialog, courseId, currentLevel.getNum(), currentLevel.getFees()));
                 if (UserService.getInstance().checkIfAlreadyEnrolled(courseId, currentLevel.getNum())) {
-                    enrollButton.setEnabled(true);
+                    var c = CourseProcessService.getInstance().getTheIdForTheNextLevel(courseId);
+                    enrollButton.setEnabled(currentLevel.getNum() == c + 1);
                 } else {
                     enrollButton.setEnabled(false);
                     enrollButton.setText("Already purchased");

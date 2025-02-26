@@ -15,16 +15,13 @@ import java.util.List;
 public class TeacherManageMeeting implements Page, Observer {
     private final JPanel mainPanel;
     private DefaultTableModel tableModel;
-    private JTable meetingTable;
     private JTextField searchField;
     private DefaultListModel<String> activeMeetingsListModel;
     private JList<String> activeMeetingsList;
-    private JButton joinMeetingButton;
-
 
     public TeacherManageMeeting() {
         MeetingService.getInstance().addObserver(this);
-        MeetingService.getInstance().markDoneMeetings();
+        MeetingService.getInstance().markDoneMeetingsForTeacher();
         mainPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -64,7 +61,7 @@ public class TeacherManageMeeting implements Page, Observer {
         activeMeetingsList.setFixedCellHeight(30);
         activeMeetingsList.setPreferredSize(new Dimension(400, 80)); // Adjusted height
 
-        joinMeetingButton = new JButton("Join Meeting");
+        JButton joinMeetingButton = new JButton("Join Meeting");
         joinMeetingButton.setPreferredSize(new Dimension(150, 40));
         joinMeetingButton.addActionListener(e -> openMeetingModal());
 
@@ -116,7 +113,7 @@ public class TeacherManageMeeting implements Page, Observer {
             }
         };
 
-        meetingTable = new JTable(tableModel);
+        JTable meetingTable = new JTable(tableModel);
         meetingTable.setRowHeight(35);
         meetingTable.getColumn("Update").setCellRenderer(new ButtonRenderer());
         meetingTable.getColumn("Update").setCellEditor(new ButtonEditor(new JCheckBox(), "Update", meetingTable));
@@ -131,14 +128,14 @@ public class TeacherManageMeeting implements Page, Observer {
     }
 
     private void loadMeetings() {
-        MeetingService.getInstance().markDoneMeetings();
+        MeetingService.getInstance().markDoneMeetingsForTeacher();
         tableModel.setRowCount(0);
         List<Meeting> meetings = MeetingService.getInstance().getMeetingsForCurrentTeacher();
         updateMeetingTable(meetings);
     }
 
     private void filterMeetings() {
-        MeetingService.getInstance().markDoneMeetings();
+        MeetingService.getInstance().markDoneMeetingsForTeacher();
 
         String searchText = searchField.getText().trim().toLowerCase();
         List<Meeting> filteredMeetings = MeetingService.getInstance().getMeetingsForCurrentTeacher().stream()
@@ -205,13 +202,11 @@ public class TeacherManageMeeting implements Page, Observer {
      */
     private class ButtonEditor extends DefaultCellEditor {
         private final JButton button;
-        private final JTable table;
         private final String action;
 
         public ButtonEditor(JCheckBox checkBox, String action, JTable table) {
             super(checkBox);
             this.action = action;
-            this.table = table;
             button = new JButton();
             button.setOpaque(true);
             button.setForeground(Color.WHITE);
@@ -258,7 +253,7 @@ public class TeacherManageMeeting implements Page, Observer {
 
     private void loadActiveMeetings() {
         activeMeetingsListModel.clear();
-        for (Meeting meeting : MeetingService.getInstance().getActiveMeetings()) {
+        for (Meeting meeting : MeetingService.getInstance().getActiveMeetingsForTeacher()) {
             String courseName = CourseService.getInstance().getCourseById(meeting.getCourseId()).getTitle();
             String level = "Level " + meeting.getCourseLevelId();
             int studentCount = meeting.getStudentIds().size();
@@ -297,15 +292,12 @@ public class TeacherManageMeeting implements Page, Observer {
     }
 
 
-
     private void startAutoRefresh() {
-        Timer timer = new Timer(60000, e -> {
-            SwingUtilities.invokeLater(() -> {
-                MeetingService.getInstance().markDoneMeetings();
-                loadActiveMeetings();
-                loadMeetings();
-            });
-        });
+        Timer timer = new Timer(60000, e -> SwingUtilities.invokeLater(() -> {
+            MeetingService.getInstance().markDoneMeetingsForTeacher();
+            loadActiveMeetings();
+            loadMeetings();
+        }));
 
         timer.setRepeats(true);
         timer.start();
