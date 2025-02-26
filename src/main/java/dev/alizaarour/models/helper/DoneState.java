@@ -10,4 +10,9 @@ public class DoneState implements CourseProcessState, Serializable {
     public void nextState(CourseProcess context) {
         JOptionPane.showMessageDialog(null, "Course is already completed.");
     }
+
+    @Override
+    public String getName() {
+        return "Done";
+    }
 }

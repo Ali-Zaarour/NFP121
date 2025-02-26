@@ -13,4 +13,9 @@ public class EnrolledState implements CourseProcessState, Serializable {
             System.out.println("Payment not completed. Cannot transition from EnrolledState.");
         }
     }
+
+    @Override
+    public String getName() {
+        return "Enrolled";
+    }
 }

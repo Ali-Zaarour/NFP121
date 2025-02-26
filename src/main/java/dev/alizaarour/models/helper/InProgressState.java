@@ -15,4 +15,9 @@ public class InProgressState implements CourseProcessState, Serializable {
             System.out.println("Quiz not completed. Remain in InProgressState.");
         }
     }
+
+    @Override
+    public String getName() {
+        return "In Progress";
+    }
 }
