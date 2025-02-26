@@ -21,13 +21,7 @@ public class DataSchema extends Observable implements Serializable {
     private int courseSeq;
     private int meetingSeq;
     private int courseProcessSeq;
-    private List<User> users;
-    private List<Course> courses;
-    private List<Meeting> meetings;
-
-    public DataSchema() {
-        this.users = new ArrayList<>();
-        this.courses = new ArrayList<>();
-    }
-
+    private List<User> users = new ArrayList<>();
+    private List<Course> courses = new ArrayList<>();
+    private List<Meeting> meetings = new ArrayList<>();
 }
