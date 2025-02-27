@@ -431,14 +431,57 @@ public class TeacherEditCoursePage extends BaseFrame {
 
     private void addSubChapter() {
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) chapterTree.getLastSelectedPathComponent();
-        if (selectedNode != null) {
-            String subChapterTitle = JOptionPane.showInputDialog("Enter Sub-Chapter Title:");
-            if (subChapterTitle != null && !subChapterTitle.trim().isEmpty()) {
-                selectedNode.add(new DefaultMutableTreeNode(subChapterTitle));
+
+        if (selectedNode == null || selectedNode.isRoot()) {
+            JOptionPane.showMessageDialog(mainPanel, "Select a chapter to add a sub-chapter.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String subChapterTitle = JOptionPane.showInputDialog("Enter Sub-Chapter Title:");
+        if (subChapterTitle != null && !subChapterTitle.trim().isEmpty()) {
+            ChapterComponent parentComponent = findChapterComponentByTitle(selectedNode.toString());  // Find the actual chapter in memory
+            if (parentComponent instanceof Chapter parentChapter) {
+                Chapter newSubChapter = new Chapter(subChapterTitle);
+                parentChapter.addSubChapter(newSubChapter); // Add to memory structure
+
+                DefaultMutableTreeNode subChapterNode = new DefaultMutableTreeNode(subChapterTitle);
+                selectedNode.add(subChapterNode); // Add to UI
                 chapterTreeModel.reload();
+            } else {
+                JOptionPane.showMessageDialog(mainPanel, "Error finding parent chapter in memory!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
+
+    private ChapterComponent findChapterComponentByTitle(String title) {
+        Level selectedLevel = levelList.getSelectedValue();
+        if (selectedLevel != null) {
+            for (Chapter chapter : selectedLevel.getChapters()) {
+                ChapterComponent result = findChapterRecursive(chapter, title);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+
+    // Recursive method to find a chapter or sub-chapter
+    private ChapterComponent findChapterRecursive(ChapterComponent chapter, String title) {
+        if (chapter.getTitle().equals(title)) {
+            return chapter;
+        }
+        if (chapter instanceof Chapter parentChapter) {
+            for (ChapterComponent subChapter : parentChapter.getSubChapters()) {
+                ChapterComponent found = findChapterRecursive(subChapter, title);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
 
     private void addContent() {
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) chapterTree.getLastSelectedPathComponent();
@@ -451,23 +494,26 @@ public class TeacherEditCoursePage extends BaseFrame {
                 // Use Factory to create the content object
                 CourseContent newContent = CourseContentFactory.createContent(selectedType, contentValue);
 
-                // Store content inside the selected Chapter
-                Chapter selectedChapter = findChapterByTitle(selectedNode.toString());
+                // Find the selected chapter or sub-chapter in memory
+                ChapterComponent selectedChapter = findChapterComponentByTitle(selectedNode.toString());
                 if (selectedChapter != null) {
-                    selectedChapter.getContents().add(newContent); // Save inside the Chapter
+                    selectedChapter.getContents().add(newContent); // Save inside the Chapter or Sub-chapter
+
+                    // Add to a UI tree
+                    DefaultMutableTreeNode contentNode = new DefaultMutableTreeNode(newContent.getContent());
+                    selectedNode.add(contentNode);
+                    chapterTreeModel.reload();
+
+                    contentField.setText(""); // Clear input field
+                } else {
+                    JOptionPane.showMessageDialog(mainPanel, "Error: Unable to find selected chapter in memory.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-                // Add to a UI tree
-                DefaultMutableTreeNode contentNode = new DefaultMutableTreeNode(newContent.getContent());
-                selectedNode.add(contentNode);
-                chapterTreeModel.reload();
-
-                contentField.setText(""); // Clear input field
             }
         } else {
-            JOptionPane.showMessageDialog(mainPanel, "Please select a chapter to add content.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainPanel, "Please select a chapter or sub-chapter to add content.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void removeSelectedNode() {
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) chapterTree.getLastSelectedPathComponent();
@@ -509,11 +555,40 @@ public class TeacherEditCoursePage extends BaseFrame {
         if (selectedLevel != null) {
             for (Chapter chapter : selectedLevel.getChapters()) {
                 DefaultMutableTreeNode chapterNode = new DefaultMutableTreeNode(chapter.getTitle());
-                rootNode.add(chapterNode);
+                rootNode.add(chapterNode); // Attach the chapter node
+
+                // Recursively load all subchapters and content inside each chapter
+                loadSubChapters(chapterNode, chapter);
             }
         }
-        chapterTreeModel.reload();
+
+        chapterTreeModel.reload(); // Ensure the tree updates visually
     }
+
+
+
+    private void loadSubChapters(DefaultMutableTreeNode parentNode, ChapterComponent parentComponent) {
+        if (parentComponent instanceof Chapter parentChapter) {
+
+            // Recursively add subchapters first
+            for (ChapterComponent subChapter : parentChapter.getSubChapters()) {
+                DefaultMutableTreeNode subChapterNode = new DefaultMutableTreeNode(subChapter.getTitle());
+                parentNode.add(subChapterNode); // Attach subchapter to parent
+
+                // Recursively load deeper subchapters and their contents
+                loadSubChapters(subChapterNode, subChapter);
+            }
+
+            // Then, add the contents to this chapter/subchapter
+            for (CourseContent content : parentChapter.getContents()) {
+                DefaultMutableTreeNode contentNode = new DefaultMutableTreeNode(
+                        content.getContent() + " (" + content.getClass().getSimpleName() + ")"
+                );
+                parentNode.add(contentNode); // Attach content to corresponding chapter/subchapter
+            }
+        }
+    }
+
 
     private void createQuiz(DefaultListModel<String> quizModel) {
         Level selectedLevel = levelList.getSelectedValue();
@@ -732,22 +807,22 @@ public class TeacherEditCoursePage extends BaseFrame {
         }
         course.setSyllabus(updatedSyllabus);
 
-        // Update levels
+        // Update levels and ensure all sub-chapters and content are saved
         List<Level> updatedLevels = new ArrayList<>();
         for (int i = 0; i < levelModel.size(); i++) {
-            updatedLevels.add(levelModel.get(i));
+            updatedLevels.add(levelModel.get(i));  // Already contains chapters and subchapters
         }
         course.setLevels(updatedLevels);
 
         // Update course in the database
         CourseService.getInstance().updateCourse(courseId, course);
 
-        // Save changes
         JOptionPane.showMessageDialog(mainPanel, "Course updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-        // Refresh UI if needed
         dispose(); // Close the editor after updating
     }
+
+
 
     // ----------- INITIALIZATION ---------------
     private void loadData() {
