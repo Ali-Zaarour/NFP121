@@ -5,6 +5,7 @@ import dev.alizaarour.models.CourseProcess;
 import java.io.Serializable;
 
 public class EnrolledState implements CourseProcessState, Serializable {
+
     @Override
     public void nextState(CourseProcess context) {
         if (context.isPaid()) {

@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class ChapterComponent implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -21,11 +22,6 @@ public abstract class ChapterComponent implements Serializable {
         this.title = title;
         this.contents = new ArrayList<>();
     }
-
-    public void addContent(CourseContent content) {
-        contents.add(content);
-    }
-
 
     public abstract void display();
 }

@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Properties;
 
 public class MeetingDialog extends JDialog {
-    private JDatePickerImpl datePicker;
-    private JTextField timeField, durationField, teacherField;
-    private JComboBox<Course> courseComboBox;
-    private JComboBox<Level> levelComboBox;
-    private JButton saveButton;
-    private Meeting meeting;
-    private Observer observer;
+    private final JDatePickerImpl datePicker;
+    private final JTextField timeField;
+    private final JTextField durationField;
+    private final JComboBox<Course> courseComboBox;
+    private final JComboBox<Level> levelComboBox;
+    private final Meeting meeting;
+    private final Observer observer;
 
     public MeetingDialog(Meeting meeting, Observer observer) {
         this.meeting = meeting;
@@ -67,7 +67,7 @@ public class MeetingDialog extends JDialog {
 
         // Teacher Name (Disabled)
         addLabel("Teacher:", gbc, row, 0);
-        teacherField = new JTextField(SessionManager.getInstance().getUser().getName());
+        JTextField teacherField = new JTextField(SessionManager.getInstance().getUser().getName());
         teacherField.setEnabled(false);
         addComponent(teacherField, gbc, row++, 1);
 
@@ -91,7 +91,7 @@ public class MeetingDialog extends JDialog {
         });
 
         // Save Button
-        saveButton = new JButton(meeting == null ? "Create" : "Update");
+        JButton saveButton = new JButton(meeting == null ? "Create" : "Update");
         saveButton.addActionListener(e -> saveMeeting());
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -138,7 +138,6 @@ public class MeetingDialog extends JDialog {
 
         datePicker.setPreferredSize(new Dimension(250, 30));
 
-        // ✅ FIX: Update text field when date is selected
         model.addChangeListener(e -> {
             Date selectedDate = model.getValue();
             if (selectedDate != null) {
@@ -149,7 +148,7 @@ public class MeetingDialog extends JDialog {
         return datePicker;
     }
 
-    // **✅ FIXED Date Formatter for JDatePickerImpl**
+
     static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
         private final String pattern = "yyyy-MM-dd";
         private final SimpleDateFormat dateFormatter = new SimpleDateFormat(pattern);
@@ -234,7 +233,6 @@ public class MeetingDialog extends JDialog {
                 return;
             }
 
-            // ✅ Meeting saved successfully
             observer.update();
             dispose();
         } catch (Exception e) {

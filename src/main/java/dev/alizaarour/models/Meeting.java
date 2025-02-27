@@ -41,15 +41,10 @@ public class Meeting implements Serializable {
         this.done = false;
     }
 
-
     public void addStudent(int studentId) {
         if (!studentIds.contains(studentId)) {
             studentIds.add(studentId);
         }
-    }
-
-    public void removeStudent(int studentId) {
-        studentIds.remove(Integer.valueOf(studentId));
     }
 }
 

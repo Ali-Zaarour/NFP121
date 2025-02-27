@@ -3,10 +3,12 @@ package dev.alizaarour.services.pack;
 import dev.alizaarour.models.CourseProcess;
 import dev.alizaarour.models.helper.EnrolledState;
 import dev.alizaarour.models.helper.InProgressState;
+import lombok.Getter;
 
-// Counts the number of courses that are still in an enrolled state.
-// Here, we assume that a course process is considered "enrolled" if its state is either Enrolled or In - Progress.
+
+@Getter
 public class CountEnrolledVisitor implements CourseProcessVisitor {
+
     private int count = 0;
 
     @Override
@@ -17,7 +19,4 @@ public class CountEnrolledVisitor implements CourseProcessVisitor {
         }
     }
 
-    public int getCount() {
-        return count;
-    }
 }

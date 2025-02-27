@@ -15,6 +15,5 @@ public enum ContentType {
     ContentType(String label) {
         this.label = label;
     }
-
 }
 

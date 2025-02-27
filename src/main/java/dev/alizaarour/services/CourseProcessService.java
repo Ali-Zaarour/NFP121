@@ -38,7 +38,6 @@ public class CourseProcessService extends Observable {
 
     // Get the course process by its id.
     public CourseProcess getCourseProcess(int courseProcessId) {
-        //get current user details
         User activeUser = UserService.getInstance().getActiveUser();
         if (activeUser instanceof Student) {
             return ((Student) activeUser).getCourseProcesses().stream()

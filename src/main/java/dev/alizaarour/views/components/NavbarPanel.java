@@ -10,7 +10,8 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 
 public class NavbarPanel extends JPanel {
-    public NavbarPanel(BaseFrame current) {
+
+    public NavbarPanel() {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(1200, 50));
         setBackground(new Color(30, 144, 255));

@@ -1,12 +1,13 @@
 package dev.alizaarour.services.pack;
 
-import dev.alizaarour.models.helper.Role;
 import dev.alizaarour.models.User;
+import dev.alizaarour.models.helper.Role;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginRedirectContext {
+
     private final Map<Role, LoginRedirectionStrategy> strategies = new HashMap<>();
 
     public LoginRedirectContext() {

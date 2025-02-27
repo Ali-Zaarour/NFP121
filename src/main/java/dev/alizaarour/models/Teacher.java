@@ -22,10 +22,9 @@ public class Teacher extends User {
 
     private List<Integer> createdCoursesIds;
 
-
     public Teacher(String name, String email, String psw, Role role) {
-        super(ApplicationInitializer.dataSchema.getUserSeq() +1, name, email, psw, role);
-        ApplicationInitializer.dataSchema.setUserSeq(ApplicationInitializer.dataSchema.getUserSeq() +1 );
+        super(ApplicationInitializer.dataSchema.getUserSeq() + 1, name, email, psw, role);
+        ApplicationInitializer.dataSchema.setUserSeq(ApplicationInitializer.dataSchema.getUserSeq() + 1);
         this.createdCoursesIds = new ArrayList<>();
     }
 }

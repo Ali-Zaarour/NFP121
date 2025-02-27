@@ -1,8 +1,9 @@
 package dev.alizaarour.services.pack;
 
 import dev.alizaarour.models.CourseProcess;
+import lombok.Getter;
 
-// Sums the payment fees of course processes that have been paid.
+@Getter
 public class TotalFeesVisitor implements CourseProcessVisitor {
 
     private double totalFees = 0.0;
@@ -14,7 +15,4 @@ public class TotalFeesVisitor implements CourseProcessVisitor {
         }
     }
 
-    public double getTotalFees() {
-        return totalFees;
-    }
 }

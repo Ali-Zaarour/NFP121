@@ -2,9 +2,12 @@ package dev.alizaarour.services.pack;
 
 import dev.alizaarour.models.CourseProcess;
 import dev.alizaarour.models.helper.DoneState;
+import lombok.Getter;
 
-// Counts the number of courses that have been completed (done).
+
+@Getter
 public class CountDoneVisitor implements CourseProcessVisitor {
+
     private int count = 0;
 
     @Override
@@ -14,7 +17,4 @@ public class CountDoneVisitor implements CourseProcessVisitor {
         }
     }
 
-    public int getCount() {
-        return count;
-    }
 }

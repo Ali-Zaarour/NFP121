@@ -37,7 +37,6 @@ public class CourseService extends Observable {
     }
 
     public void removeCourse(int courseID) {
-        //iterate over courses and remove the course with the given id
         ApplicationInitializer.dataSchema.getCourses().removeIf(course -> course.getPk() == courseID);
         notifyObservers();
     }
