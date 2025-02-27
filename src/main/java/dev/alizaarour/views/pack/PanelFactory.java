@@ -15,8 +15,8 @@ public abstract class PanelFactory {
         this.mainContent = mainContent;
     }
 
-    public NavbarPanel createNavbar(BaseFrame current) {
-        return new NavbarPanel(current);
+    public NavbarPanel createNavbar() {
+        return new NavbarPanel();
     }
 
     public SidebarPanel createSidebar() {

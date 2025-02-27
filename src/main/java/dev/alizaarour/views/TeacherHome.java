@@ -25,7 +25,7 @@ public class TeacherHome extends BaseFrame {
     protected void createComponents() {
         setLayout(new BorderLayout());
 
-        add(panelFactory.createNavbar(this), BorderLayout.NORTH);
+        add(panelFactory.createNavbar(), BorderLayout.NORTH);
         add(panelFactory.createSidebar(), BorderLayout.WEST);
 
         mainContent.addPage(PageName.TEACHER_MANAGE_COURSES);

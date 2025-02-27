@@ -4,6 +4,7 @@ import dev.alizaarour.views.components.MainContentPanel;
 import dev.alizaarour.views.helper.PageName;
 
 public class NavigateToPageCommand implements Command {
+
     private final MainContentPanel mainContent;
     private final PageName pageName;
 

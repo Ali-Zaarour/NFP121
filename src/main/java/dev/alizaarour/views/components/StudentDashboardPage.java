@@ -4,6 +4,7 @@ import dev.alizaarour.services.CourseProcessService;
 import dev.alizaarour.services.CourseService;
 import dev.alizaarour.services.PaymentService;
 import dev.alizaarour.services.UserService;
+import dev.alizaarour.services.pack.OMTPaymentStrategy;
 import dev.alizaarour.services.pack.VisaPaymentStrategy;
 import dev.alizaarour.utils.Observer;
 
@@ -404,7 +405,7 @@ public class StudentDashboardPage implements Page, Observer {
                         JOptionPane.showMessageDialog(null, "Failed to create course process.");
                         return;
                     }
-                    PaymentService.getInstance().processPayment(newCourseId, fees, new VisaPaymentStrategy());
+                    PaymentService.getInstance().processPayment(newCourseId, fees, new OMTPaymentStrategy());
                     JOptionPane.showMessageDialog(paymentDialog, "OMT Payment processed!");
                     paymentDialog.dispose();
                 }

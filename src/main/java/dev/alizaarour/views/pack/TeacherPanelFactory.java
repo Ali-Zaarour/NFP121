@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.util.List;
 
 public class TeacherPanelFactory extends PanelFactory {
+
     public TeacherPanelFactory(MainContentPanel mainContent) {
         super(mainContent);
     }
