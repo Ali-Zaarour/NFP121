@@ -8,6 +8,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -42,9 +43,14 @@ public class Meeting implements Serializable {
     }
 
     public void addStudent(int studentId) {
+        if (studentIds == null) {
+            studentIds = new ArrayList<>(); // Initialize if null
+        }
+
         if (!studentIds.contains(studentId)) {
             studentIds.add(studentId);
         }
     }
+
 }
 

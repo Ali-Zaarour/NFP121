@@ -109,7 +109,7 @@ public class TeacherManageMeeting implements Page, Observer {
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 7 || column == 8;
+                return column == 8|| column == 9;
             }
         };
 

@@ -30,7 +30,7 @@ public abstract class BaseFrame extends JFrame {
         centerFrameOnScreen();
         setIconImageToFrame();
         setVisible(true);
-        setResizable(false);
+        //setResizable(false);
         setTitle("Online training center : " + frameName);
 
         addWindowListener(new WindowAdapter() {

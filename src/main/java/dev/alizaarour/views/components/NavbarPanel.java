@@ -1,7 +1,6 @@
 package dev.alizaarour.views.components;
 
 import dev.alizaarour.config.SessionManager;
-import dev.alizaarour.views.BaseFrame;
 
 import javax.swing.*;
 import java.awt.*;

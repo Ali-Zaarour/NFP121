@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -214,7 +215,7 @@ public class MeetingDialog extends JDialog {
             if (meeting == null) {
                 result = MeetingService.getInstance().addMeeting(
                         new Meeting(date, time, duration, teacherId, selectedCourse.getPk(),
-                                selectedLevel.getNum(), List.of()));
+                                selectedLevel.getNum(), new ArrayList<>()));
             } else {
                 meeting.setDate(date);
                 meeting.setTime(time);

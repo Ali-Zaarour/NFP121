@@ -262,7 +262,14 @@ public class StudentCoursesPage implements Page, Observer {
 
             JPanel questionPanel = new JPanel();
             questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
-            questionPanel.setBorder(BorderFactory.createTitledBorder(question.getQuestionText()));
+            questionPanel.setBorder(BorderFactory.createTitledBorder("")); // Remove title border
+
+            // ✅ Ensure question text takes full width
+            JLabel questionLabel = new JLabel("<html><b>" + question.getQuestionText() + "</b></html>");
+            questionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            questionLabel.setMaximumSize(new Dimension(quizDialog.getWidth() - 40, Integer.MAX_VALUE));
+
+            questionPanel.add(questionLabel);
 
             answerGroups[i] = new ButtonGroup();
             answerButtons[i] = new JRadioButton[question.getChoices().size()];
@@ -304,7 +311,6 @@ public class StudentCoursesPage implements Page, Observer {
         quizDialog.add(finishButton, BorderLayout.SOUTH);
         quizDialog.setVisible(true);
     }
-
 
     private int calculateQuizScore(Quiz quiz, JRadioButton[][] answerButtons) {
         int score = 0;
@@ -422,8 +428,6 @@ public class StudentCoursesPage implements Page, Observer {
             }
         }
     }
-
-
 
     private Object findChapterOrContentRecursive(Course course, int levelId, String title) {
         Level selectedLevel = course.getLevels().get(levelId - 1);
