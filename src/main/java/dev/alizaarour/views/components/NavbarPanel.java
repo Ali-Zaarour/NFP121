@@ -25,7 +25,7 @@ public class NavbarPanel extends JPanel {
         logoutButton.setPreferredSize(new Dimension(35, 35));
         logoutButton.setFocusPainted(false);
         logoutButton.setContentAreaFilled(false);
-        logoutButton.addActionListener(e -> SessionManager.getInstance().logout(current));
+        logoutButton.addActionListener(e -> SessionManager.getInstance().logout());
         URL imageUrl = getClass().getResource("/images/logout.png");
         if (imageUrl != null) {
             ImageIcon icon = new ImageIcon(imageUrl);

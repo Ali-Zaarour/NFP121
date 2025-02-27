@@ -9,6 +9,8 @@ import dev.alizaarour.services.pack.CourseProcessVisitor;
 import dev.alizaarour.services.pack.TotalFeesVisitor;
 import dev.alizaarour.utils.Observable;
 
+import java.time.LocalDate;
+
 public class CourseProcessService extends Observable {
 
     private static CourseProcessService instance = new CourseProcessService();
@@ -59,6 +61,16 @@ public class CourseProcessService extends Observable {
             }
         }
         return index;
+    }
+
+    //save the new quiz result
+    public void saveTheNewResult(int courseProcessId, int note) {
+        var process = getCourseProcess(courseProcessId);
+        process.setQuizDate(LocalDate.now());
+        process.setQuizNote(note);
+        process.setQuizDone(true);
+        nextState(courseProcessId);
+        notifyObservers();
     }
 
     //go to the next state

@@ -11,8 +11,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StudentDashboardPage implements Page, Observer {
@@ -33,7 +31,7 @@ public class StudentDashboardPage implements Page, Observer {
         summaryPanel = new JPanel(new GridLayout(1, 3, 10, 10));
 
         totalCoursesBox = createSummaryBox("Total Courses", "" + CourseService.getInstance().getTotalCourses());
-        currentCoursesBox = createSummaryBox("Current Courses", "" + CourseProcessService.getInstance().getTotalEnrolledCourses());
+        currentCoursesBox = createSummaryBox("Enrolled / In Progress Courses", "" + CourseProcessService.getInstance().getTotalEnrolledCourses());
         doneCoursesBox = createSummaryBox("Completed Courses", "" + CourseProcessService.getInstance().getTotalDoneCourses());
 
         summaryPanel.add(totalCoursesBox);
@@ -95,7 +93,7 @@ public class StudentDashboardPage implements Page, Observer {
         summaryPanel.removeAll();
 
         totalCoursesBox = createSummaryBox("Total Courses", "" + CourseService.getInstance().getTotalCourses());
-        currentCoursesBox = createSummaryBox("My Courses", "" + CourseProcessService.getInstance().getTotalEnrolledCourses());
+        currentCoursesBox = createSummaryBox("Enrolled / In Progress Courses", "" + CourseProcessService.getInstance().getTotalEnrolledCourses());
         doneCoursesBox = createSummaryBox("Completed Courses", "" + CourseProcessService.getInstance().getTotalDoneCourses());
 
         summaryPanel.add(totalCoursesBox);
